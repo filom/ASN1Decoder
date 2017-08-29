@@ -24,7 +24,7 @@
 import Foundation
 
 
-class X509Certificate {
+public class X509Certificate {
     
     private var derData: Data!
     private var asn1: [ASN1Object]!
@@ -33,7 +33,7 @@ class X509Certificate {
     private let beginPemBlock = "-----BEGIN CERTIFICATE-----"
     private let endPemBlock   = "-----END CERTIFICATE-----"
     
-    init(data: Data) throws {
+    public init(data: Data) throws {
         
         derData = data
         
@@ -64,7 +64,7 @@ class X509Certificate {
     
     
     /// Checks that the given date is within the certificate's validity period.
-    func checkValidity(_ date: Date = Date()) -> Bool {
+    public func checkValidity(_ date: Date = Date()) -> Bool {
         if let notBefore = notBefore, let notAfter = notAfter {
             return date > notBefore && date < notAfter
         }
@@ -73,7 +73,7 @@ class X509Certificate {
     
     
     /// Gets the version (version number) value from the certificate.
-    var version: Int? {
+    public var version: Int? {
         if let v = firstLeafValue(block: block1) as? Data, let i = v.toIntValue() {
             return Int(i) + 1
         }
@@ -82,13 +82,13 @@ class X509Certificate {
     
     
     /// Gets the serialNumber value from the certificate.
-    var serialNumber: Data? {
+    public var serialNumber: Data? {
         return block1.sub?[1].value as? Data
     }
     
     
     /// Returns the issuer (issuer distinguished name) value from the certificate as a String.
-    var issuerDistinguishedName: String? {
+    public var issuerDistinguishedName: String? {
         if let issuerBlock = block1.sub?[3] {
             return blockDistinguishedName(block: issuerBlock)
         }
@@ -97,7 +97,7 @@ class X509Certificate {
     
     
     /// Returns the subject (subject distinguished name) value from the certificate as a String.
-    var subjectDistinguishedName: String? {
+    public var subjectDistinguishedName: String? {
         if let subjectBlock = block1.sub?[5] {
             return blockDistinguishedName(block: subjectBlock)
         }
@@ -107,46 +107,39 @@ class X509Certificate {
     
     
     /// Gets the notBefore date from the validity period of the certificate.
-    var notBefore: Date? {
+    public var notBefore: Date? {
         return block1.sub?[4].sub?[0].value as? Date
     }
     
     
     /// Gets the notAfter date from the validity period of the certificate.
-    var notAfter: Date? {
+    public var notAfter: Date? {
         return block1.sub?[4].sub?[1].value as? Date
     }
     
     
     /// Gets the signature value (the raw signature bits) from the certificate.
-    var signature: Data? {
+    public var signature: Data? {
         return asn1[0].sub?[2].value as? Data
     }
     
     
     /// Gets the signature algorithm name for the certificate signature algorithm.
-    var sigAlgName: String? {
+    public var sigAlgName: String? {
         return ASN1Object.oidDecodeMap[sigAlgOID ?? ""]
     }
     
     
     /// Gets the signature algorithm OID string from the certificate.
-    var sigAlgOID: String? {
+    public var sigAlgOID: String? {
         return block1.sub?[2].sub?[0].value as? String
     }
     
     
     ///    Gets the DER-encoded signature algorithm parameters from this certificate's signature algorithm.
-    var sigAlgParams: Data? {
+    public var sigAlgParams: Data? {
         return nil
     }
-    
-    //    abstract boolean[]     getIssuerUniqueID()
-    //    Gets the issuerUniqueID value from the certificate.
-    
-    //    abstract boolean[]     getSubjectUniqueID()
-    //    Gets the subjectUniqueID value from the certificate.
-    
     
     /*
         Gets a boolean array representing bits of the KeyUsage extension, (OID = 2.5.29.15).
@@ -163,7 +156,7 @@ class X509Certificate {
             decipherOnly            (8) 
         }
     */
-    var keyUsage: [Bool] {
+    public var keyUsage: [Bool] {
         var result: [Bool] = []
         if let oidBlock = block1.findOid("2.5.29.15") {
             let data = oidBlock.parent?.sub?.last?.sub?[0].value as? Data
@@ -178,7 +171,7 @@ class X509Certificate {
     
     
     /// Gets a list of Strings representing the OBJECT IDENTIFIERs of the ExtKeyUsageSyntax field of the extended key usage extension, (OID = 2.5.29.37).
-    var extendedKeyUsage: [String] {
+    public var extendedKeyUsage: [String] {
         var result: [String] = []
         if let oidBlock = block1.findOid("2.5.29.37") {
             for item in oidBlock.parent?.sub?.last?.sub?[0].sub ?? [] {
@@ -199,7 +192,7 @@ class X509Certificate {
     
     
     /// Gets a collection of subject alternative names from the SubjectAltName extension, (OID = 2.5.29.17).
-    var subjectAlternativeNames: [String] {
+    public var subjectAlternativeNames: [String] {
         var result: [String] = []
         if let oidBlock = block1.findOid("2.5.29.17") {
             for item in oidBlock.parent?.sub?.last?.sub?[0].sub ?? [] {
@@ -213,7 +206,7 @@ class X509Certificate {
     
     
     /// Gets a collection of issuer alternative names from the IssuerAltName extension, (OID = 2.5.29.18).
-    var issuerAlternativeNames: [String] {
+    public var issuerAlternativeNames: [String] {
         var result: [String] = []
         if let oidBlock = block1.findOid("2.5.29.18") {
             for item in oidBlock.parent?.sub?.last?.sub?[0].sub ?? [] {
@@ -229,48 +222,13 @@ class X509Certificate {
     
     
     /// Gets the informations of the public key from this certificate.
-    var publicKey: PublicKey? {
+    public var publicKey: PublicKey? {
         if let pkBlock = block1.sub?[6] {
             return PublicKey(pkBlock: pkBlock)
         }
         return nil
     }
     
-    
-    class PublicKey {
-        var pkBlock: ASN1Object!
-        
-        init(pkBlock: ASN1Object) {
-            self.pkBlock = pkBlock
-        }
-        
-        var algOid: String? {
-            return pkBlock.sub?[0].sub?[0].value as? String
-        }
-        
-        var algName: String? {
-            return ASN1Object.oidDecodeMap[algOid ?? ""]
-        }
-        
-        var algParams: String? {
-            return pkBlock.sub?[0].sub?[1].value as? String
-        }
-        
-        var key: Data? {
-            if let keyBlock = pkBlock.sub?.last {
-                if let keyBlockValue = firstLeafValue(block: keyBlock) as? Data {
-                    do {
-                        let asn1PkBlock = try ASN1DERDecoder.decode(data: keyBlockValue)
-                        print(asn1PkBlock)
-                        return firstLeafValue(block: asn1PkBlock[0]) as? Data
-                    } catch {
-                        return keyBlockValue
-                    }
-                }
-            }
-            return nil
-        }
-    }
     
     
     
@@ -313,6 +271,43 @@ class X509Certificate {
     }
 
 }
+
+public class PublicKey {
+    var pkBlock: ASN1Object!
+    
+    init(pkBlock: ASN1Object) {
+        self.pkBlock = pkBlock
+    }
+    
+    var algOid: String? {
+        return pkBlock.sub?[0].sub?[0].value as? String
+    }
+    
+    var algName: String? {
+        return ASN1Object.oidDecodeMap[algOid ?? ""]
+    }
+    
+    var algParams: String? {
+        return pkBlock.sub?[0].sub?[1].value as? String
+    }
+    
+    var key: Data? {
+        if let keyBlock = pkBlock.sub?.last {
+            if let keyBlockValue = firstLeafValue(block: keyBlock) as? Data {
+                do {
+                    let asn1PkBlock = try ASN1DERDecoder.decode(data: keyBlockValue)
+                    print(asn1PkBlock)
+                    return firstLeafValue(block: asn1PkBlock[0]) as? Data
+                } catch {
+                    return keyBlockValue
+                }
+            }
+        }
+        return nil
+    }
+}
+
+
 
 
 private func firstLeafValue(block: ASN1Object) -> Any? {

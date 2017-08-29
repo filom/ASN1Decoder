@@ -25,7 +25,7 @@
 import Foundation
 
 
-class ASN1Object : CustomStringConvertible {
+public class ASN1Object : CustomStringConvertible {
     
     init() {
     }
@@ -54,7 +54,7 @@ class ASN1Object : CustomStringConvertible {
         return nil
     }
     
-    var description: String {
+    public var description: String {
         return printAsn1()
     }
     
