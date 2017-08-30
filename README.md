@@ -37,3 +37,86 @@ do {
     print(error)
 }
 ```
+
+
+
+### Usage for SSL pinning 
+
+Define a delegate for URLSession
+
+``` swift
+import Security
+import ASN1Decoder
+
+class PinningURLSessionDelegate: NSObject, URLSessionDelegate {
+    
+    var publicKeyHexEncoded: String!
+    
+    public init(publicKeyHexEncoded: String) {
+        self.publicKeyHexEncoded = publicKeyHexEncoded.uppercased()
+    }
+    
+    func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Swift.Void) {
+        
+        if (challenge.protectionSpace.authenticationMethod == NSURLAuthenticationMethodServerTrust) {
+            if let serverTrust = challenge.protectionSpace.serverTrust {
+                var secresult = SecTrustResultType.invalid
+                let status = SecTrustEvaluate(serverTrust, &secresult)
+                
+                if status == errSecSuccess {
+                    
+                    if let serverCertificate = SecTrustGetCertificateAtIndex(serverTrust, 0) {
+                        
+                        let serverCertificateCFData = SecCertificateCopyData(serverCertificate)
+                        let data = CFDataGetBytePtr(serverCertificateCFData)
+                        let size = CFDataGetLength(serverCertificateCFData)
+                        let certData = NSData(bytes: data, length: size)
+                        
+                        do {
+                            let x509cert = try X509Certificate(data: certData as Data)
+                            
+                            if let pk = x509cert.publicKey?.key {
+                                
+                                let serverPkHexEncoded = dataToHexString(pk)
+                            
+                                if publicKeyHexEncoded == serverPkHexEncoded {
+                                    completionHandler(.useCredential, URLCredential(trust:serverTrust))
+                                    return
+                                }
+                            }
+                            
+                        } catch {
+                            print(error)
+                        }
+                    }
+                }
+            }
+        }
+        
+        completionHandler(.cancelAuthenticationChallenge, nil)
+    }
+    
+    func dataToHexString(_ data: Data) -> String {
+        return data.map { String(format: "%02X", $0) }.joined()
+    }
+}
+```
+
+
+Then create a URLSession and use it as usual
+
+``` swift
+let publicKeyHexEncoded = "..." // your HTTPS certifcate public key
+
+let session = URLSession(
+                configuration: URLSessionConfiguration.ephemeral,
+                delegate: PinningURLSessionDelegate(publicKeyHexEncoded: publicKeyHexEncoded),
+                delegateQueue: nil)
+```
+
+
+To extract the public key from your certificate with openssl use this command line
+
+```
+openssl x509 -modulus -noout < certificate.cer
+```
