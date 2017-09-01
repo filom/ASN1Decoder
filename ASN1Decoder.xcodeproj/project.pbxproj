@@ -14,6 +14,7 @@
 		412A9E571F55C6830099110C /* ASN1Identifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 412A9E531F55C6830099110C /* ASN1Identifier.swift */; };
 		412A9E581F55C6830099110C /* ASN1Object.swift in Sources */ = {isa = PBXBuildFile; fileRef = 412A9E541F55C6830099110C /* ASN1Object.swift */; };
 		412A9E591F55C6830099110C /* X509Certificate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 412A9E551F55C6830099110C /* X509Certificate.swift */; };
+		41D14FE31F58C15A0058DE7A /* PKCS7.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41D14FE21F58C1590058DE7A /* PKCS7.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -38,6 +39,7 @@
 		412A9E541F55C6830099110C /* ASN1Object.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ASN1Object.swift; sourceTree = "<group>"; };
 		412A9E551F55C6830099110C /* X509Certificate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = X509Certificate.swift; sourceTree = "<group>"; };
 		414F5E2C1F55EFB700449E72 /* ASN1Decoder.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = ASN1Decoder.podspec; sourceTree = "<group>"; };
+		41D14FE21F58C1590058DE7A /* PKCS7.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PKCS7.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,6 +88,7 @@
 				412A9E531F55C6830099110C /* ASN1Identifier.swift */,
 				412A9E541F55C6830099110C /* ASN1Object.swift */,
 				412A9E551F55C6830099110C /* X509Certificate.swift */,
+				41D14FE21F58C1590058DE7A /* PKCS7.swift */,
 				412A9E3C1F55C6500099110C /* Info.plist */,
 			);
 			path = ASN1Decoder;
@@ -213,6 +216,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				41D14FE31F58C15A0058DE7A /* PKCS7.swift in Sources */,
 				412A9E581F55C6830099110C /* ASN1Object.swift in Sources */,
 				412A9E591F55C6830099110C /* X509Certificate.swift in Sources */,
 				412A9E561F55C6830099110C /* Asn1Decoder.swift in Sources */,

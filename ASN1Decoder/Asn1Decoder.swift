@@ -45,9 +45,15 @@ public class ASN1DERDecoder {
             if asn1obj.identifier!.isConstructed() {
                 
                 let contentData = try loadSubContent(iterator: &iterator)
-                var subIterator = contentData.makeIterator()
                 
-                asn1obj.sub = try parse(iterator: &subIterator)
+                if contentData.isEmpty {
+                    asn1obj.sub = try parse(iterator: &iterator)
+                }
+                else {
+                    var subIterator = contentData.makeIterator()
+                    asn1obj.sub = try parse(iterator: &subIterator)
+                }
+                
                 asn1obj.value = nil
                 
                 for item in asn1obj.sub! {
@@ -60,14 +66,16 @@ public class ASN1DERDecoder {
                     
                     var contentData = try loadSubContent(iterator: &iterator)
                     
+                    asn1obj.rawValue = Data(contentData)
+                    
+                    
                     
                     // decode the content data with come more convenient format
                     
                     switch asn1obj.identifier!.tagNumber() {
                         
                     case .endOfContent:
-                        asn1obj.value = nil
-                        
+                        return result
                         
                     case .boolean:
                         if let value = contentData.first {
@@ -119,8 +127,9 @@ public class ASN1DERDecoder {
                         
                         
                     case .bitString:
-                        
-                        _ = contentData.remove(at: 0) // unused bits
+                        if contentData.count > 0 {
+                            _ = contentData.remove(at: 0) // unused bits
+                        }
                         asn1obj.value = contentData
                     
                         
@@ -205,6 +214,10 @@ public class ASN1DERDecoder {
     
     // Decode DER OID bytes to String with dot notation
     private static func decodeOid(contentData: inout Data) -> String {
+        if contentData.isEmpty {
+            return ""
+        }
+        
         var oid: String = ""
         
         let first = Int(contentData.remove(at: 0))

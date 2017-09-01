@@ -30,6 +30,8 @@ public class ASN1Object : CustomStringConvertible {
     init() {
     }
     
+    var rawValue: Data?
+    
     var identifier: ASN1Identifier?
     
     var value: Any?
