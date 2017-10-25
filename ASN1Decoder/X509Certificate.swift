@@ -323,19 +323,19 @@ public class PublicKey {
         self.pkBlock = pkBlock
     }
     
-    var algOid: String? {
+    public var algOid: String? {
         return pkBlock.sub?[0].sub?[0].value as? String
     }
     
-    var algName: String? {
+    public var algName: String? {
         return ASN1Object.oidDecodeMap[algOid ?? ""]
     }
     
-    var algParams: String? {
+   public  var algParams: String? {
         return pkBlock.sub?[0].sub?[1].value as? String
     }
     
-    var key: Data? {
+    public var key: Data? {
         if let keyBlock = pkBlock.sub?.last {
             if let keyBlockValue = firstLeafValue(block: keyBlock) as? Data {
                 do {
