@@ -200,16 +200,21 @@ public class ASN1DERDecoder {
         
         let len = getContentLength(iterator: &iterator)
         
-        var contentData = Data()
-        for _ in 0..<len {
+        guard len < Int.max else {
+            return Data()
+        }
+        
+        var byteArray: [UInt8] = []
+        
+        for _ in 0..<Int(len) {
             if let n = iterator.next() {
-                contentData.append(n)
+                byteArray.append(n)
             }
             else {
                 throw ASN1Error.outOfBuffer
             }
         }
-        return contentData
+        return Data(bytes: byteArray)
     }
     
     // Decode DER OID bytes to String with dot notation

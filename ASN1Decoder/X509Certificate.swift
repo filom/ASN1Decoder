@@ -64,9 +64,9 @@ public class X509Certificate : CustomStringConvertible {
         block1 = asn1[0].sub![0]
     }
     
-    init(asn1: [ASN1Object]) {
-        self.asn1 = asn1
-        block1 = asn1[0].sub![0]
+    init(asn1: ASN1Object) {
+        self.asn1 = [asn1]
+        block1 = asn1.sub![0]
     }
     
     public var description: String {
@@ -112,6 +112,28 @@ public class X509Certificate : CustomStringConvertible {
     }
     
     
+    public var issuerOIDs: [String] {
+        var result: [String] = []
+        if let subjectBlock = block1[X509BlockPosition.issuer] {
+            for sub in subjectBlock.sub ?? [] {
+                if let value = firstLeafValue(block: sub) as? String {
+                    result.append(value)
+                }
+            }
+        }
+        return result
+    }
+    
+    public func issuer(oid: String) -> String? {
+        if let subjectBlock = block1[X509BlockPosition.issuer] {
+            if let oidBlock = subjectBlock.findOid(oid) {
+                return oidBlock.parent?.sub?.last?.value as? String
+            }
+        }
+        return nil
+    }
+    
+    
     /// Returns the subject (subject distinguished name) value from the certificate as a String.
     public var subjectDistinguishedName: String? {
         if let subjectBlock = block1[X509BlockPosition.subject] {
@@ -120,7 +142,26 @@ public class X509Certificate : CustomStringConvertible {
         return nil
     }
     
+    public var subjectOIDs: [String] {
+        var result: [String] = []
+        if let subjectBlock = block1[X509BlockPosition.subject] {
+            for sub in subjectBlock.sub ?? [] {
+                if let value = firstLeafValue(block: sub) as? String {
+                    result.append(value)
+                }
+            }
+        }
+        return result
+    }
     
+    public func subject(oid: String) -> String? {
+        if let subjectBlock = block1[X509BlockPosition.subject] {
+            if let oidBlock = subjectBlock.findOid(oid) {
+                return oidBlock.parent?.sub?.last?.value as? String
+            }
+        }
+        return nil
+    }
     
     /// Gets the notBefore date from the validity period of the certificate.
     public var notBefore: Date? {
@@ -157,20 +198,22 @@ public class X509Certificate : CustomStringConvertible {
         return nil
     }
     
-    /*
+    /**
      Gets a boolean array representing bits of the KeyUsage extension, (OID = 2.5.29.15).
      
+     ```
      KeyUsage ::= BIT STRING {
-     digitalSignature        (0),
-     nonRepudiation          (1), -- recent editions of X.509 have renamed this bit to contentCommitment
-     keyEncipherment         (2),
-     dataEncipherment        (3),
-     keyAgreement            (4),
-     keyCertSign             (5),
-     cRLSign                 (6),
-     encipherOnly            (7),
-     decipherOnly            (8)
+       digitalSignature        (0),
+       nonRepudiation          (1),
+       keyEncipherment         (2),
+       dataEncipherment        (3),
+       keyAgreement            (4),
+       keyCertSign             (5),
+       cRLSign                 (6),
+       encipherOnly            (7),
+       decipherOnly            (8)
      }
+     ```
      */
     public var keyUsage: [Bool] {
         var result: [Bool] = []
@@ -323,19 +366,19 @@ public class PublicKey {
         self.pkBlock = pkBlock
     }
     
-    var algOid: String? {
+    public var algOid: String? {
         return pkBlock.sub?[0].sub?[0].value as? String
     }
     
-    var algName: String? {
+    public var algName: String? {
         return ASN1Object.oidDecodeMap[algOid ?? ""]
     }
     
-    var algParams: String? {
+    public var algParams: String? {
         return pkBlock.sub?[0].sub?[1].value as? String
     }
     
-    var key: Data? {
+    public var key: Data? {
         if let keyBlock = pkBlock.sub?.last {
             if let keyBlockValue = firstLeafValue(block: keyBlock) as? Data {
                 do {

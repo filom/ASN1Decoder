@@ -41,6 +41,13 @@ public class ASN1Object : CustomStringConvertible {
     weak var parent: ASN1Object?
     
     
+    func sub(_ index: Int) -> ASN1Object? {
+        if let sub = self.sub, index >= 0 && index < sub.count {
+            return sub[index]
+        }
+        return nil
+    }
+    
     func findOid(_ oid: String) -> ASN1Object? {
         for child in sub ?? [] {
             if child.identifier?.tagNumber() == .objectIdentifier {

@@ -26,12 +26,13 @@ import Foundation
 
 public class PKCS7 {
     
-    private var derData: Data!
-    private var asn1: [ASN1Object]!
-    private var mainBlock: ASN1Object!
+    var derData: Data!
+    var asn1: [ASN1Object]!
+    var mainBlock: ASN1Object!
     
     private let OID_Data = "1.2.840.113549.1.7.1"
     private let OID_SignedData = "1.2.840.113549.1.7.2"
+    private let OID_EnvelopedData = "1.2.840.113549.1.7.3"
     
     public init(data: Data) throws {
         
@@ -39,31 +40,54 @@ public class PKCS7 {
         
         asn1 = try ASN1DERDecoder.decode(data: derData)
         
-        guard asn1.count > 0 && asn1[0].sub?[0].value as? String == OID_SignedData else {
+        guard asn1.count > 0 else {
             throw PKCS7Error.parseError
         }
         
-        mainBlock = asn1[0].sub?[1].sub?[0]
+        mainBlock = asn1[0].sub(1)?.sub(0)
+        
+        guard mainBlock != nil else {
+            throw PKCS7Error.parseError
+        }
+        
+        guard asn1[0].sub(0)?.value as? String == OID_SignedData else {
+            throw PKCS7Error.notSupported
+        }
     }
     
     
     
     public var digestAlgorithm: String? {
-        return asn1[0].sub?[0].value as? String
+        if let block = mainBlock.sub(1) {
+            return firstLeafValue(block: block) as? String
+        }
+        return nil
+    }
+    
+    public var digestAlgorithmName: String? {
+        return ASN1Object.oidDecodeMap[digestAlgorithm ?? ""] ?? digestAlgorithm
     }
     
     
     public var certificate: X509Certificate? {
-        if let blockSigner = mainBlock.sub?[3].sub {
-            return X509Certificate(asn1: blockSigner)
+        if let blockSigner = mainBlock.sub(3)?.sub, blockSigner.count > 0  {
+            return X509Certificate(asn1: blockSigner[0])
         }
         return nil
+    }
+    
+    public var certificates: [X509Certificate] {
+        var out: [X509Certificate] = []
+        for blockSigner in mainBlock.sub(3)?.sub ?? [] {
+            out.append(X509Certificate(asn1: blockSigner))
+        }
+        return out
     }
     
     
     public var data: Data? {
         if let block = mainBlock.findOid(OID_Data) {
-            if let dataBlock = block.parent?.sub?.last?.sub?[0] {
+            if let dataBlock = block.parent?.sub?.last?.sub(0) {
                 if dataBlock.value == nil {
                     var out = Data()
                     for chunk in dataBlock.sub ?? [] {
@@ -87,6 +111,16 @@ public class PKCS7 {
 
 
 enum PKCS7Error: Error {
+    case notSupported
     case parseError
+}
+
+
+
+private func firstLeafValue(block: ASN1Object) -> Any? {
+    if let sub = block.sub, sub.count > 0 {
+        return firstLeafValue(block: sub[0])
+    }
+    return block.value
 }
 
