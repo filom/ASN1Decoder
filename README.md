@@ -10,7 +10,7 @@ ASN1 DER Decoder for X.509 Certificate
 
 #### CocoaPods (iOS 9+, OS X 10.10+)
 
-You can use [CocoaPods](http://cocoapods.org/) to install `ASN1Decoder`by adding it to your `Podfile`:
+You can use [CocoaPods](http://cocoapods.org/) to install `ASN1Decoder` by adding it to your `Podfile`:
 
 ```ruby
 platform :ios, '9.0'
@@ -20,6 +20,15 @@ target 'MyApp' do
 	pod 'ASN1Decoder'
 end
 ```
+
+#### Carthage (iOS 9+, OS X 10.10+)
+
+You can use [Carthage](https://github.com/Carthage/Carthage) to install `ASN1Decoder` by adding it to your `Cartfile`:
+
+```
+github "filom/ASN1Decoder"
+```
+
 
 ## Usage
 
