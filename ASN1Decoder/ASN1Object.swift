@@ -30,25 +30,31 @@ public class ASN1Object : CustomStringConvertible {
     init() {
     }
     
-    var rawValue: Data?
+    /// This property contains the DER encoded object
+    public var rawValue: Data?
     
-    var identifier: ASN1Identifier?
+    /// This property contains the decoded Swift object whenever is possible
+    public var value: Any?
     
-    var value: Any?
+    
+    public var identifier: ASN1Identifier?
     
     var sub: [ASN1Object]?
     
     weak var parent: ASN1Object?
     
-    
-    func sub(_ index: Int) -> ASN1Object? {
+    public func sub(_ index: Int) -> ASN1Object? {
         if let sub = self.sub, index >= 0 && index < sub.count {
             return sub[index]
         }
         return nil
     }
     
-    func findOid(_ oid: String) -> ASN1Object? {
+    public func subCount() -> Int {
+        return sub?.count ?? 0
+    }
+    
+    public func findOid(_ oid: String) -> ASN1Object? {
         for child in sub ?? [] {
             if child.identifier?.tagNumber() == .objectIdentifier {
                 if child.value as? String == oid {

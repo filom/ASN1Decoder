@@ -61,12 +61,12 @@ public class X509Certificate : CustomStringConvertible {
             throw ASN1Error.parseError
         }
         
-        block1 = asn1[0].sub![0]
+        block1 = asn1[0].sub(0)
     }
     
     init(asn1: ASN1Object) {
         self.asn1 = [asn1]
-        block1 = asn1.sub![0]
+        block1 = asn1.sub(0)
     }
     
     public var description: String {
@@ -163,21 +163,22 @@ public class X509Certificate : CustomStringConvertible {
         return nil
     }
     
+    
     /// Gets the notBefore date from the validity period of the certificate.
     public var notBefore: Date? {
-        return block1[X509BlockPosition.dateValidity]?.sub?[0].value as? Date
+        return block1[X509BlockPosition.dateValidity]?.sub(0)?.value as? Date
     }
     
     
     /// Gets the notAfter date from the validity period of the certificate.
     public var notAfter: Date? {
-        return block1[X509BlockPosition.dateValidity]?.sub?[1].value as? Date
+        return block1[X509BlockPosition.dateValidity]?.sub(1)?.value as? Date
     }
     
     
     /// Gets the signature value (the raw signature bits) from the certificate.
     public var signature: Data? {
-        return asn1[0].sub?[2].value as? Data
+        return asn1[0].sub(2)?.value as? Data
     }
     
     
@@ -189,7 +190,7 @@ public class X509Certificate : CustomStringConvertible {
     
     /// Gets the signature algorithm OID string from the certificate.
     public var sigAlgOID: String? {
-        return block1.sub?[2].sub?[0].value as? String
+        return block1.sub(2)?.sub(0)?.value as? String
     }
     
     
@@ -198,27 +199,27 @@ public class X509Certificate : CustomStringConvertible {
         return nil
     }
     
+    
     /**
      Gets a boolean array representing bits of the KeyUsage extension, (OID = 2.5.29.15).
-     
      ```
      KeyUsage ::= BIT STRING {
-       digitalSignature        (0),
-       nonRepudiation          (1),
-       keyEncipherment         (2),
-       dataEncipherment        (3),
-       keyAgreement            (4),
-       keyCertSign             (5),
-       cRLSign                 (6),
-       encipherOnly            (7),
-       decipherOnly            (8)
+     digitalSignature        (0),
+     nonRepudiation          (1),
+     keyEncipherment         (2),
+     dataEncipherment        (3),
+     keyAgreement            (4),
+     keyCertSign             (5),
+     cRLSign                 (6),
+     encipherOnly            (7),
+     decipherOnly            (8)
      }
      ```
      */
     public var keyUsage: [Bool] {
         var result: [Bool] = []
         if let oidBlock = block1.findOid(OID_KeyUsage) {
-            let data = oidBlock.parent?.sub?.last?.sub?[0].value as? Data
+            let data = oidBlock.parent?.sub?.last?.sub(0)?.value as? Data
             let bits: UInt8 = data?.first ?? 0
             for i in 0...7 {
                 let value = bits & UInt8(1 << i) != 0
@@ -283,7 +284,7 @@ public class X509Certificate : CustomStringConvertible {
     }
     
     private var extensionBlocks: [ASN1Object]? {
-        return block1.sub?.count ?? 0 > 6 ? block1[X509BlockPosition.extensions]?.sub?[0].sub : nil
+        return block1.sub?.count ?? 0 > 6 ? block1[X509BlockPosition.extensions]?.sub(0)?.sub : nil
     }
     
     
@@ -367,7 +368,7 @@ public class PublicKey {
     }
     
     public var algOid: String? {
-        return pkBlock.sub?[0].sub?[0].value as? String
+        return pkBlock.sub(0)?.sub(0)?.value as? String
     }
     
     public var algName: String? {
@@ -375,7 +376,7 @@ public class PublicKey {
     }
     
     public var algParams: String? {
-        return pkBlock.sub?[0].sub?[1].value as? String
+        return pkBlock.sub(0)?.sub(1)?.value as? String
     }
     
     public var key: Data? {
@@ -402,7 +403,7 @@ public class X509Extension {
     }
     
     public var oid: String? {
-        return block.sub?[0].value as? String
+        return block.sub(0)?.value as? String
     }
     
     public var name: String? {
@@ -411,7 +412,7 @@ public class X509Extension {
     
     public var isCritical: Bool {
         if block.sub?.count ?? 0 > 2 {
-            return block.sub?[1].value as? Bool ?? false
+            return block.sub(1)?.value as? Bool ?? false
         }
         return false
     }
