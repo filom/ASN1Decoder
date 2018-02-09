@@ -56,6 +56,8 @@ public class ASN1DERDecoder {
                 
                 asn1obj.value = nil
                 
+                asn1obj.rawValue = Data(contentData)
+                
                 for item in asn1obj.sub! {
                     item.parent = asn1obj
                 }
@@ -105,9 +107,13 @@ public class ASN1DERDecoder {
                          .generalString,
                          .universalString,
                          .characterString,
-                         .bmpString:
+                         .t61String:
                         
                         asn1obj.value = String(data: contentData, encoding: .utf8)
+                        
+                        
+                    case .bmpString:
+                        asn1obj.value = String(data: contentData, encoding: .unicode)
                         
                         
                     case .visibleString,
@@ -243,8 +249,9 @@ public class ASN1DERDecoder {
     
     private static func dateFormatter(contentData: inout Data, formats: [String]) -> Date? {
         if let str = String(data: contentData, encoding: .utf8) {
-            let fmt = DateFormatter()
             for format in formats {
+                let fmt = DateFormatter()
+                fmt.locale = Locale(identifier: "en_US_POSIX")
                 fmt.dateFormat = format
                 if let dt = fmt.date(from: str) {
                     return dt

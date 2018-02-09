@@ -30,7 +30,7 @@ public class PKCS7 {
     var asn1: [ASN1Object]!
     var mainBlock: ASN1Object!
     
-    private let OID_Data = "1.2.840.113549.1.7.1"
+    let OID_Data = "1.2.840.113549.1.7.1"
     private let OID_SignedData = "1.2.840.113549.1.7.2"
     private let OID_EnvelopedData = "1.2.840.113549.1.7.3"
     
@@ -87,19 +87,32 @@ public class PKCS7 {
     
     public var data: Data? {
         if let block = mainBlock.findOid(OID_Data) {
-            if let dataBlock = block.parent?.sub?.last?.sub(0) {
-                if dataBlock.value == nil {
-                    var out = Data()
-                    for chunk in dataBlock.sub ?? [] {
-                        if let value = chunk.rawValue {
-                            out.append(value)
-                        }
-                    }
-                    return out
+            if let dataBlock = block.parent?.sub?.last {
+                var out = Data()
+                if let value = dataBlock.value as? Data {
+                    out.append(value)
+                }
+                else if dataBlock.value is String, let rawValue = dataBlock.rawValue {
+                    out.append(rawValue)
                 }
                 else {
-                    return dataBlock.value as? Data
+                    for sub in dataBlock.sub ?? [] {
+                        if let value = sub.value as? Data {
+                            out.append(value)
+                        }
+                        else if sub.value is String, let rawValue = sub.rawValue {
+                            out.append(rawValue)
+                        }
+                        else {
+                            for sub2 in sub.sub ?? [] {
+                                if let value = sub2.rawValue {
+                                    out.append(value)
+                                }
+                            }
+                        }
+                    }
                 }
+                return out.count > 0 ? out : nil
             }
         }
         return nil

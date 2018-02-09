@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "ASN1Decoder"
-  s.version      = "1.0.3"
+  s.version      = "1.1"
   s.summary      = "ASN1 DER Decoder for X.509 certificate"
   s.description  = "ASN1 DER Decoder to parse X.509 certificate"
   s.homepage     = "https://github.com/filom/ASN1Decoder"

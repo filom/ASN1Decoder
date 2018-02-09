@@ -14,6 +14,7 @@
 		412A9E571F55C6830099110C /* ASN1Identifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 412A9E531F55C6830099110C /* ASN1Identifier.swift */; };
 		412A9E581F55C6830099110C /* ASN1Object.swift in Sources */ = {isa = PBXBuildFile; fileRef = 412A9E541F55C6830099110C /* ASN1Object.swift */; };
 		412A9E591F55C6830099110C /* X509Certificate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 412A9E551F55C6830099110C /* X509Certificate.swift */; };
+		41B11CD1202E16060009670B /* PKCS7_AppleReceipt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41B11CD0202E16060009670B /* PKCS7_AppleReceipt.swift */; };
 		41D14FE31F58C15A0058DE7A /* PKCS7.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41D14FE21F58C1590058DE7A /* PKCS7.swift */; };
 /* End PBXBuildFile section */
 
@@ -39,6 +40,7 @@
 		412A9E541F55C6830099110C /* ASN1Object.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ASN1Object.swift; sourceTree = "<group>"; };
 		412A9E551F55C6830099110C /* X509Certificate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = X509Certificate.swift; sourceTree = "<group>"; };
 		414F5E2C1F55EFB700449E72 /* ASN1Decoder.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = ASN1Decoder.podspec; sourceTree = "<group>"; };
+		41B11CD0202E16060009670B /* PKCS7_AppleReceipt.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PKCS7_AppleReceipt.swift; sourceTree = "<group>"; };
 		41D14FE21F58C1590058DE7A /* PKCS7.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PKCS7.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -89,6 +91,7 @@
 				412A9E541F55C6830099110C /* ASN1Object.swift */,
 				412A9E551F55C6830099110C /* X509Certificate.swift */,
 				41D14FE21F58C1590058DE7A /* PKCS7.swift */,
+				41B11CD0202E16060009670B /* PKCS7_AppleReceipt.swift */,
 				412A9E3C1F55C6500099110C /* Info.plist */,
 			);
 			path = ASN1Decoder;
@@ -160,7 +163,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0830;
-				LastUpgradeCheck = 0830;
+				LastUpgradeCheck = 0920;
 				ORGANIZATIONNAME = "Filippo Maguolo";
 				TargetAttributes = {
 					412A9E371F55C6500099110C = {
@@ -218,6 +221,7 @@
 			files = (
 				41D14FE31F58C15A0058DE7A /* PKCS7.swift in Sources */,
 				412A9E581F55C6830099110C /* ASN1Object.swift in Sources */,
+				41B11CD1202E16060009670B /* PKCS7_AppleReceipt.swift in Sources */,
 				412A9E591F55C6830099110C /* X509Certificate.swift in Sources */,
 				412A9E561F55C6830099110C /* Asn1Decoder.swift in Sources */,
 				412A9E571F55C6830099110C /* ASN1Identifier.swift in Sources */,
@@ -253,7 +257,9 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
@@ -261,7 +267,11 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -307,7 +317,9 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
@@ -315,7 +327,11 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -349,7 +365,7 @@
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = YS96L92VL6;
@@ -373,7 +389,7 @@
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = YS96L92VL6;
