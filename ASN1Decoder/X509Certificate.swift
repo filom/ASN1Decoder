@@ -325,7 +325,7 @@ public class X509Certificate : CustomStringConvertible {
                 result.append("=")
                 if let value = oidBlock.parent?.sub?.last?.value as? String {
                     let specialChar = ",+=\n<>#;\\"
-                    let quote = value.characters.contains(where: { specialChar.characters.contains($0) }) ? "\"" : ""
+                    let quote = value.contains(where: { specialChar.contains($0) }) ? "\"" : ""
                     result.append(quote)
                     result.append(value)
                     result.append(quote)
