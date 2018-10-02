@@ -68,12 +68,7 @@ public class X509Certificate: CustomStringConvertible {
     }
 
     public var description: String {
-        var str = ""
-        asn1.forEach({
-            str += $0.description
-            str += "\n"
-        })
-        return str
+        return asn1.reduce("") { $0 + "\($1.description)\n" }
     }
 
     /// Checks that the given date is within the certificate's validity period.
