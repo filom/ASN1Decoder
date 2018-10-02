@@ -222,18 +222,18 @@ public class ASN1DERDecoder {
         }
         return Data(bytes: byteArray)
     }
-    
+
     // Decode DER OID bytes to String with dot notation
     private static func decodeOid(contentData: inout Data) -> String {
         if contentData.isEmpty {
             return ""
         }
-        
+
         var oid: String = ""
-        
+
         let first = Int(contentData.remove(at: 0))
         oid.append("\(first / 40).\(first % 40)")
-        
+
         var t = 0
         while contentData.count > 0 {
             let n = Int(contentData.remove(at: 0))
@@ -246,7 +246,6 @@ public class ASN1DERDecoder {
         return oid
     }
 
-    
     private static func dateFormatter(contentData: inout Data, formats: [String]) -> Date? {
         if let str = String(data: contentData, encoding: .utf8) {
             for format in formats {
@@ -262,31 +261,22 @@ public class ASN1DERDecoder {
     }
 }
 
-
-
 enum ASN1Error: Error {
     case parseError
     case outOfBuffer
 }
 
-
-
 extension Data {
-    
     func toIntValue() -> UInt64? {
-        
         if self.count > 8 { // check if suitable for UInt64
             return nil
         }
-        
+
         var value: UInt64 = 0
-        
         for (i,b) in self.enumerated() {
             let v = UInt64(b) << UInt64(8*(count-i-1))
             value += v
         }
-        
         return value
     }
-    
 }
