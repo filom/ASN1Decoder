@@ -427,8 +427,8 @@ public class X509Extension {
 }
 
 private func firstLeafValue(block: ASN1Object) -> Any? {
-    if let sub = block.sub, sub.count > 0 {
-        return firstLeafValue(block: sub[0])
+    if let sub = block.sub?.first {
+        return firstLeafValue(block: sub)
     }
     return block.value
 }
