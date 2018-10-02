@@ -226,8 +226,8 @@ public class X509Certificate: CustomStringConvertible {
     }
 
     /// Gets the informations of the public key from this certificate.
-    public var publicKey: ANS1PublicKey? {
-        return block1[X509BlockPosition.publicKey].map(ANS1PublicKey.init)
+    public var publicKey: PublicKey? {
+        return block1[X509BlockPosition.publicKey].map(PublicKey.init)
     }
 
     /// Get a list of critical extension OID codes
