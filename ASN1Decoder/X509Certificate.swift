@@ -226,49 +226,38 @@ public class X509Certificate: CustomStringConvertible {
     }
 
     /// Gets the informations of the public key from this certificate.
-    public var publicKey: PublicKey? {
-        if let pkBlock = block1[X509BlockPosition.publicKey] {
-            return PublicKey(pkBlock: pkBlock)
-        }
-        return nil
+    public var publicKey: ANS1PublicKey? {
+        return block1[X509BlockPosition.publicKey].map(ANS1PublicKey.init)
     }
 
     /// Get a list of critical extension OID codes
     public var criticalExtensionOIDs: [String] {
-        var result: [String] = []
-        for extBlock in extensionBlocks ?? [] {
-            let ext = X509Extension(block: extBlock)
-            if ext.isCritical, let oid = ext.oid {
-                result.append(oid)
-            }
-        }
-        return result
+        guard let extensionBlocks = extensionBlocks else { return [] }
+        return extensionBlocks
+            .map { X509Extension(block: $0) }
+            .filter { $0.isCritical }
+            .compactMap { $0.oid }
     }
 
     /// Get a list of non critical extension OID codes
     public var nonCriticalExtensionOIDs: [String] {
-        var result: [String] = []
-        for extBlock in extensionBlocks ?? [] {
-            let ext = X509Extension(block: extBlock)
-            if !ext.isCritical, let oid = ext.oid {
-                result.append(oid)
-            }
-        }
-        return result
+        guard let extensionBlocks = extensionBlocks else { return [] }
+        return extensionBlocks
+            .map { X509Extension(block: $0) }
+            .filter { !$0.isCritical }
+            .compactMap { $0.oid }
     }
 
     private var extensionBlocks: [ASN1Object]? {
-        return block1.sub?.count ?? 0 > 6 ? block1[X509BlockPosition.extensions]?.sub(0)?.sub : nil
+        return block1[X509BlockPosition.extensions]?.sub(0)?.sub
     }
 
     /// Gets the extension information of the given OID code.
     public func extensionObject(oid: String) -> X509Extension? {
-        if block1.sub?.count ?? 0 > 6 {
-            if let extBlock = block1[X509BlockPosition.extensions]?.findOid(oid) {
-                return X509Extension(block: extBlock.parent!)
-            }
-        }
-        return nil
+        return block1[X509BlockPosition.extensions]?
+            .findOid(oid)?
+            .parent
+            .map(X509Extension.init)
     }
 
     // Format subject/issuer information in RFC1779
