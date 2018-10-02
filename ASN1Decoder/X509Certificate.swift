@@ -49,16 +49,15 @@ public class X509Certificate: CustomStringConvertible {
 
     public init(data: Data) throws {
         derData = data
-        
-        decodePemToDer()
-        
-        asn1 = try ASN1DERDecoder.decode(data: derData)
-        
-        guard asn1.count > 0 else {
-            throw ASN1Error.parseError
+
+        asn1 = try ASN1DERDecoder.decode(data: data)
+        guard asn1.count > 0,
+            let block1 = asn1.first?.sub(0) else {
+                throw ASN1Error.parseError
         }
-        
-        block1 = asn1[0].sub(0)
+        self.block1 = block1
+
+        decodePemToDer()
     }
     
     init(asn1: ASN1Object) {
