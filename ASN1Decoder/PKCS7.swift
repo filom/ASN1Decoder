@@ -24,9 +24,9 @@
 import Foundation
 
 public class PKCS7 {
-    var derData: Data!
-    var asn1: [ASN1Object]!
-    var mainBlock: ASN1Object!
+    let derData: Data
+    let asn1: [ASN1Object]
+    let mainBlock: ASN1Object
     
     let OID_Data = "1.2.840.113549.1.7.1"
     private let OID_SignedData = "1.2.840.113549.1.7.2"
@@ -36,17 +36,14 @@ public class PKCS7 {
         derData = data
         asn1 = try ASN1DERDecoder.decode(data: derData)
         
-        guard asn1.count > 0 else {
+        guard let firstBlock = asn1.first,
+            let mainBlock = firstBlock.sub(1)?.sub(0) else {
             throw PKCS7Error.parseError
         }
         
-        mainBlock = asn1[0].sub(1)?.sub(0)
+        self.mainBlock = mainBlock
         
-        guard mainBlock != nil else {
-            throw PKCS7Error.parseError
-        }
-        
-        guard asn1[0].sub(0)?.value as? String == OID_SignedData else {
+        guard firstBlock.sub(0)?.value as? String == OID_SignedData else {
             throw PKCS7Error.notSupported
         }
     }
