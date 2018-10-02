@@ -23,8 +23,8 @@
 
 import Foundation
 
+public class ASN1Identifier: CustomStringConvertible {
 
-public class ASN1Identifier : CustomStringConvertible {
     public enum Class : UInt8 {
         case universal = 0x00
         case application = 0x40

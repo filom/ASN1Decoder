@@ -309,7 +309,11 @@ public class X509Certificate: CustomStringConvertible {
 
     // read possibile PEM encoding
     private func decodePemToDer() {
-        if let pem = String(data: derData, encoding: .ascii), pem.contains(beginPemBlock) {
+        if
+            let data = self.derData,
+            let pem = String(data: data, encoding: .ascii),
+            pem.contains(beginPemBlock) {
+
             let lines = pem.components(separatedBy: .newlines)
             var base64buffer  = ""
             var certLine = false
