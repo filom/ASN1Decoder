@@ -23,13 +23,11 @@
 
 import Foundation
 
+public class X509Certificate: CustomStringConvertible {
+    private let asn1: [ASN1Object]
+    private let block1: ASN1Object
+    private var derData: Data?
 
-public class X509Certificate : CustomStringConvertible {
-    
-    private var derData: Data!
-    private var asn1: [ASN1Object]!
-    private var block1: ASN1Object!
-    
     private let beginPemBlock = "-----BEGIN CERTIFICATE-----"
     private let endPemBlock   = "-----END CERTIFICATE-----"
 
@@ -384,8 +382,8 @@ public class PublicKey {
 }
 
 public class X509Extension {
-    var block: ASN1Object!
-    
+    let block: ASN1Object
+
     init(block: ASN1Object) {
         self.block = block
     }
