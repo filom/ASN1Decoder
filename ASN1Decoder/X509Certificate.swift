@@ -435,9 +435,8 @@ private func firstLeafValue(block: ASN1Object) -> Any? {
 
 extension ASN1Object {
     subscript(index: X509Certificate.X509BlockPosition) -> ASN1Object? {
-        if index.rawValue < sub?.count ?? 0 {
-            return sub?[index.rawValue]
-        }
-        return nil
+        guard let sub = sub,
+            sub.indices.contains(index.rawValue) else { return nil }
+        return sub[index.rawValue]
     }
 }
