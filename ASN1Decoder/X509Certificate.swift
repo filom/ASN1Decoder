@@ -307,13 +307,13 @@ public class X509Certificate: CustomStringConvertible {
             var base64buffer  = ""
             var certLine = false
             for line in lines {
-                if line == endPemBlock  {
+                if line == endPemBlock {
                     certLine = false
                 }
                 if certLine {
                     base64buffer.append(line)
                 }
-                if line == beginPemBlock  {
+                if line == beginPemBlock {
                     certLine = true
                 }
             }
