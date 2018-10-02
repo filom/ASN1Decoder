@@ -63,18 +63,11 @@ public class PKCS7 {
     }
 
     public var certificate: X509Certificate? {
-        if let blockSigner = mainBlock.sub(3)?.sub, blockSigner.count > 0  {
-            return X509Certificate(asn1: blockSigner[0])
-        }
-        return nil
+        return mainBlock.sub(3)?.sub?.first.map { try? X509Certificate(asn1: $0) } ?? nil
     }
     
     public var certificates: [X509Certificate] {
-        var out: [X509Certificate] = []
-        for blockSigner in mainBlock.sub(3)?.sub ?? [] {
-            out.append(X509Certificate(asn1: blockSigner))
-        }
-        return out
+        return mainBlock.sub(3)?.sub?.compactMap { try? X509Certificate(asn1: $0) } ?? []
     }
 
     public var data: Data? {
