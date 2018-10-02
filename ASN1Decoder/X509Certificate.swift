@@ -336,6 +336,9 @@ public class X509Certificate: CustomStringConvertible {
 }
 
 public class PublicKey {
+    private let OID_ECPublicKey = "1.2.840.10045.2.1"
+    private let OID_RSAEncryption = "1.2.840.113549.1.1.1"
+
     var pkBlock: ASN1Object!
 
     init(pkBlock: ASN1Object) {
@@ -355,11 +358,13 @@ public class PublicKey {
     }
 
     public var key: Data? {
-        guard let algOid = algOid, let keyData = pkBlock.sub(1)?.value as? Data else {
-            return nil
+        guard
+            let algOid = algOid,
+            let keyData = pkBlock.sub(1)?.value as? Data else {
+                return nil
         }
-        switch algOid {
 
+        switch algOid {
         case OID_ECPublicKey:
             return keyData
 
@@ -376,9 +381,6 @@ public class PublicKey {
             return nil
         }
     }
-
-    private let OID_ECPublicKey = "1.2.840.10045.2.1"
-    private let OID_RSAEncryption = "1.2.840.113549.1.1.1"
 }
 
 public class X509Extension {
