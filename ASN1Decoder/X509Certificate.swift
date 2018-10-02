@@ -59,10 +59,12 @@ public class X509Certificate: CustomStringConvertible {
 
         decodePemToDer()
     }
-    
-    init(asn1: ASN1Object) {
+
+    init(asn1: ASN1Object) throws {
+        guard let block1 = asn1.sub(0) else { throw ASN1Error.parseError }
+
         self.asn1 = [asn1]
-        block1 = asn1.sub(0)
+        self.block1 = block1
     }
 
     public var description: String {
