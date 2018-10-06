@@ -46,17 +46,30 @@ public class X509Certificate: CustomStringConvertible {
         case extensions = 7
     }
 
-    public init(data: Data) throws {
-        derData = data
+    public convenience init(data: Data) throws {
+        if String(data: data, encoding: .utf8)?.contains(X509Certificate.beginPemBlock) ?? false {
+            try self.init(pem: data)
+        } else {
+            try self.init(der: data)
+        }
+    }
 
-        asn1 = try ASN1DERDecoder.decode(data: data)
+    public init(der: Data) throws {
+        asn1 = try ASN1DERDecoder.decode(data: der)
         guard asn1.count > 0,
             let block1 = asn1.first?.sub(0) else {
                 throw ASN1Error.parseError
         }
-        self.block1 = block1
 
-        decodePemToDer()
+        self.block1 = block1
+    }
+
+    public convenience init(pem: Data) throws {
+        guard let derData = X509Certificate.decodeToDER(pem: pem) else {
+            throw ASN1Error.parseError
+        }
+
+        try self.init(der: derData)
     }
 
     init(asn1: ASN1Object) throws {
