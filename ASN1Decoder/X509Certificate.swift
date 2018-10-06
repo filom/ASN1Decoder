@@ -26,10 +26,9 @@ import Foundation
 public class X509Certificate: CustomStringConvertible {
     private let asn1: [ASN1Object]
     private let block1: ASN1Object
-    private var derData: Data?
 
-    private let beginPemBlock = "-----BEGIN CERTIFICATE-----"
-    private let endPemBlock   = "-----END CERTIFICATE-----"
+    private static let beginPemBlock = "-----BEGIN CERTIFICATE-----"
+    private static let endPemBlock   = "-----END CERTIFICATE-----"
 
     private let OID_KeyUsage = "2.5.29.15"
     private let OID_ExtendedKeyUsage = "2.5.29.37"
@@ -297,10 +296,9 @@ public class X509Certificate: CustomStringConvertible {
     }
 
     // read possibile PEM encoding
-    private func decodePemToDer() {
+    private static func decodeToDER(pem pemData: Data) -> Data? {
         if
-            let data = self.derData,
-            let pem = String(data: data, encoding: .ascii),
+            let pem = String(data: pemData, encoding: .ascii),
             pem.contains(beginPemBlock) {
 
             let lines = pem.components(separatedBy: .newlines)
@@ -318,9 +316,11 @@ public class X509Certificate: CustomStringConvertible {
                 }
             }
             if let derDataDecoded = Data(base64Encoded: base64buffer) {
-                derData = derDataDecoded
+                return derDataDecoded
             }
         }
+
+        return nil
     }
 }
 
