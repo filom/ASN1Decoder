@@ -23,16 +23,15 @@
 
 import Foundation
 
+public class ASN1Identifier: CustomStringConvertible {
 
-public class ASN1Identifier : CustomStringConvertible {
-    
     public enum Class : UInt8 {
         case universal = 0x00
         case application = 0x40
         case contextSpecific = 0x80
         case `private` = 0xC0
     }
-    
+
     public enum TagNumber: UInt8 {
         case endOfContent = 0x00
         case boolean = 0x01
@@ -64,15 +63,13 @@ public class ASN1Identifier : CustomStringConvertible {
         case characterString = 0x1D
         case bmpString = 0x1E
     }
-    
+
     var rawValue: UInt8
-    
-    
+
     init(rawValue: UInt8) {
         self.rawValue = rawValue
     }
-    
-    
+
     public func typeClass() -> Class {
         for tc in [Class.application, Class.contextSpecific, Class.private] {
             if (rawValue & tc.rawValue) == tc.rawValue {
@@ -81,18 +78,18 @@ public class ASN1Identifier : CustomStringConvertible {
         }
         return .universal
     }
-    
+
     public func isPrimitive() -> Bool {
         return (rawValue & 0x20) == 0
     }
     public func isConstructed() -> Bool {
         return (rawValue & 0x20) != 0
     }
-    
+
     public func tagNumber() -> TagNumber {
         return TagNumber(rawValue: rawValue & 0x1F) ?? .endOfContent
     }
-    
+
     public var description: String {
         if typeClass() == .universal {
             return String(describing: tagNumber())
@@ -102,4 +99,3 @@ public class ASN1Identifier : CustomStringConvertible {
         }
     }
 }
-

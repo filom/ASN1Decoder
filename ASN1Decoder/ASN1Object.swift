@@ -21,39 +21,32 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //  SOFTWARE.
 
-
 import Foundation
 
-
 public class ASN1Object : CustomStringConvertible {
-    
-    init() {
-    }
-    
     /// This property contains the DER encoded object
     public var rawValue: Data?
-    
+
     /// This property contains the decoded Swift object whenever is possible
     public var value: Any?
-    
-    
+
     public var identifier: ASN1Identifier?
-    
+
     var sub: [ASN1Object]?
-    
+
     weak var parent: ASN1Object?
-    
+
     public func sub(_ index: Int) -> ASN1Object? {
-        if let sub = self.sub, index >= 0 && index < sub.count {
+        if let sub = self.sub, index >= 0, index < sub.count {
             return sub[index]
         }
         return nil
     }
-    
+
     public func subCount() -> Int {
         return sub?.count ?? 0
     }
-    
+
     public func findOid(_ oid: String) -> ASN1Object? {
         for child in sub ?? [] {
             if child.identifier?.tagNumber() == .objectIdentifier {
@@ -68,11 +61,11 @@ public class ASN1Object : CustomStringConvertible {
         }
         return nil
     }
-    
+
     public var description: String {
         return printAsn1()
     }
-    
+
     fileprivate func printAsn1(insets: String = "") -> String {
         var output = insets
         output.append(identifier?.description.uppercased() ?? "")
@@ -90,8 +83,8 @@ public class ASN1Object : CustomStringConvertible {
         output.append(sub != nil && sub!.count > 0 ? insets + "}\n" : "")
         return output
     }
-    
-    
+
+
     static let oidDecodeMap:[String:String] = [
         "0.4.0.1862.1.1" : "etsiQcsCompliance",
         "0.4.0.1862.1.3" : "etsiQcsRetentionPeriod",
@@ -152,8 +145,4 @@ public class ASN1Object : CustomStringConvertible {
         "2.5.4.8" : "stateOrProvinceName",
         "2.5.4.9" : "streetAddress"
     ]
-    
-
 }
-
-
