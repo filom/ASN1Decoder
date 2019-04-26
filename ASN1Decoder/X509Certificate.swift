@@ -420,7 +420,7 @@ public class X509Extension {
 
     var valueAsStrings: [String] {
         var result: [String] = []
-        for item in block.sub?.last?.sub ?? [] {
+        for item in block.sub?.last?.sub?.last?.sub ?? [] {
             if let name = item.value as? String {
                 result.append(name)
             }
