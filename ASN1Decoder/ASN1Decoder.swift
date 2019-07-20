@@ -220,7 +220,7 @@ public class ASN1DERDecoder {
                 throw ASN1Error.outOfBuffer
             }
         }
-        return Data(bytes: byteArray)
+        return Data(byteArray)
     }
 
     // Decode DER OID bytes to String with dot notation
