@@ -12,6 +12,6 @@ Pod::Spec.new do |s|
   s.source_files  = "ASN1Decoder/*.swift"
   s.frameworks    = "Foundation"
   s.pod_target_xcconfig =  {
-        'SWIFT_VERSION' => '4.0',
+        'SWIFT_VERSION' => '5.0',
   }
 end
