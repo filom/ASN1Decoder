@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "41ECF192230985DC00588953"
-               BuildableName = "ASN1Decoder_macOS.framework"
+               BuildableName = "ASN1Decoder.framework"
                BlueprintName = "ASN1Decoder macOS"
                ReferencedContainer = "container:ASN1Decoder.xcodeproj">
             </BuildableReference>
@@ -46,7 +46,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "41ECF192230985DC00588953"
-            BuildableName = "ASN1Decoder_macOS.framework"
+            BuildableName = "ASN1Decoder.framework"
             BlueprintName = "ASN1Decoder macOS"
             ReferencedContainer = "container:ASN1Decoder.xcodeproj">
          </BuildableReference>
@@ -64,7 +64,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "41ECF192230985DC00588953"
-            BuildableName = "ASN1Decoder_macOS.framework"
+            BuildableName = "ASN1Decoder.framework"
             BlueprintName = "ASN1Decoder macOS"
             ReferencedContainer = "container:ASN1Decoder.xcodeproj">
          </BuildableReference>
