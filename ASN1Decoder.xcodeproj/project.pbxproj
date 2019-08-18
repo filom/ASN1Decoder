@@ -43,7 +43,7 @@
 		414F5E2C1F55EFB700449E72 /* ASN1Decoder.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = ASN1Decoder.podspec; sourceTree = "<group>"; };
 		41B11CD0202E16060009670B /* PKCS7_AppleReceipt.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PKCS7_AppleReceipt.swift; sourceTree = "<group>"; };
 		41D14FE21F58C1590058DE7A /* PKCS7.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PKCS7.swift; sourceTree = "<group>"; };
-		41ECF193230985DC00588953 /* ASN1Decoder_macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ASN1Decoder_macOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		41ECF193230985DC00588953 /* ASN1Decoder.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ASN1Decoder.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		41ECF195230985DC00588953 /* ASN1Decoder_macOS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ASN1Decoder_macOS.h; sourceTree = "<group>"; };
 		41ECF196230985DC00588953 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -90,7 +90,7 @@
 			children = (
 				412A9E381F55C6500099110C /* ASN1Decoder.framework */,
 				412A9E411F55C6500099110C /* ASN1DecoderTests.xctest */,
-				41ECF193230985DC00588953 /* ASN1Decoder_macOS.framework */,
+				41ECF193230985DC00588953 /* ASN1Decoder.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -201,7 +201,7 @@
 			);
 			name = "ASN1Decoder macOS";
 			productName = "ASN1Decoder macOS";
-			productReference = 41ECF193230985DC00588953 /* ASN1Decoder_macOS.framework */;
+			productReference = 41ECF193230985DC00588953 /* ASN1Decoder.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 /* End PBXNativeTarget section */
@@ -371,6 +371,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = ASN1Decoder;
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -427,6 +428,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_NAME = ASN1Decoder;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -452,7 +454,6 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = net.filippomaguolo.ASN1Decoder;
-				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -476,7 +477,6 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = net.filippomaguolo.ASN1Decoder;
-				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
@@ -532,7 +532,6 @@
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = net.filippomaguolo.ASN1Decoder;
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
@@ -561,7 +560,6 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = net.filippomaguolo.ASN1Decoder;
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
