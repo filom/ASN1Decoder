@@ -42,6 +42,12 @@ extension PKCS7 {
         /// CFBundleVersion (in iOS) or CFBundleShortVersionString (in macOS) in Info.plist
         public fileprivate(set) var originalApplicationVersion: String?
         
+        /// Opaque value used, with other data, to compute the SHA-1 hash during validation.
+        public fileprivate(set) var opaqueValue: Data?
+
+        /// SHA-1 hash, used to validate the receipt.
+        public fileprivate(set) var sha1: Data?
+
         public fileprivate(set) var receiptCreationDate: Date?
         public fileprivate(set) var receiptCreationDateString: String?
         public fileprivate(set) var receiptExpirationDate: Date?
@@ -85,6 +91,12 @@ extension PKCS7 {
                 
             case 3:
                 receiptInfo.bundleVersion = fieldValueString
+                
+            case 4:
+                receiptInfo.opaqueValue = item.sub(2)?.rawValue
+                
+            case 5:
+                receiptInfo.sha1 = item.sub(2)?.rawValue
                 
             case 19:
                 receiptInfo.originalApplicationVersion = fieldValueString
