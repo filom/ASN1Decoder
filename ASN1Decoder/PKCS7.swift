@@ -105,10 +105,3 @@ enum PKCS7Error: Error {
     case notSupported
     case parseError
 }
-
-private func firstLeafValue(block: ASN1Object) -> Any? {
-    if let sub = block.sub, sub.count > 0 {
-        return firstLeafValue(block: sub[0])
-    }
-    return block.value
-}

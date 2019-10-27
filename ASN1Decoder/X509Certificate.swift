@@ -30,26 +30,11 @@ public class X509Certificate: CustomStringConvertible {
     private static let beginPemBlock = "-----BEGIN CERTIFICATE-----"
     private static let endPemBlock   = "-----END CERTIFICATE-----"
 
-    private let OID_KeyUsage                = "2.5.29.15"
-    private let OID_ExtendedKeyUsage        = "2.5.29.37"
-    private let OID_SubjectAltName          = "2.5.29.17"
-    private let OID_IssuerAltName           = "2.5.29.18"
-    
-    private let OID_CommonName              = "2.5.4.3"
-    private let OID_Surname                 = "2.5.4.4"
-    private let OID_SerialNumber            = "2.5.4.5"
-    private let OID_CountryName             = "2.5.4.6"
-    private let OID_LocalityName            = "2.5.4.7"
-    private let OID_StateOrProvinceName     = "2.5.4.8"
-    private let OID_StreetAddress           = "2.5.4.9"
-    private let OID_OrganizationName        = "2.5.4.10"
-    private let OID_OrganizationalUnitName  = "2.5.4.11"
-    private let OID_GivenName               = "2.5.4.42"
-    private let OID_DnQualifier             = "2.5.4.46"
-    private let OID_eMail                   = "1.2.840.113549.1.9.1"
+    private let OID_KeyUsage = "2.5.29.15"
+    private let OID_ExtendedKeyUsage = "2.5.29.37"
+    private let OID_SubjectAltName = "2.5.29.17"
+    private let OID_IssuerAltName = "2.5.29.18"
 
-    
-    
     enum X509BlockPosition : Int {
         case version = 0
         case serialNumber = 1
@@ -178,36 +163,9 @@ public class X509Certificate: CustomStringConvertible {
         return nil
     }
     
-    public var  subjectCommonName:               String? {return self.subject(oid: OID_CommonName)}
-    public var  subjectDnQualifier:              String? {return self.subject(oid: OID_DnQualifier            )}
-    public var  subjectSerialNumber:             String? {return self.subject(oid: OID_SerialNumber    )}
-    public var  subjectGivenName:                String? {return self.subject(oid: OID_GivenName              )}
-    public var  subjectSurname:                  String? {return self.subject(oid: OID_Surname                )}
-    public var  subjectOrganizationalUnitName:   String? {return self.subject(oid: OID_OrganizationalUnitName )}
-    public var  subjectOrganizationName:         String? {return self.subject(oid: OID_OrganizationName       )}
-    public var  subjectStreetAddress:            String? {return self.subject(oid: OID_StreetAddress          )}
-    public var  subjectLocalityName:             String? {return self.subject(oid: OID_LocalityName           )}
-    public var  subjectStateOrProvinceName:      String? {return self.subject(oid: OID_StateOrProvinceName    )}
-    public var  subjectCountryName:              String? {return self.subject(oid: OID_CountryName            )}
-    public var  subjectEMail:                    String? {return self.subject(oid: OID_eMail                  )}
-    
-    
-    public var  issuerCommonName:               String? {return self.issuer(oid: OID_CommonName)}
-    public var  issuerDnQualifier:              String? {return self.issuer(oid: OID_DnQualifier            )}
-    public var  issuerSerialNumber:             String? {return self.issuer(oid: OID_SerialNumber    )}
-    public var  issuerGivenName:                String? {return self.issuer(oid: OID_GivenName              )}
-    public var  issuerSurname:                  String? {return self.issuer(oid: OID_Surname                )}
-    public var  issuerOrganizationalUnitName:   String? {return self.issuer(oid: OID_OrganizationalUnitName )}
-    public var  issuerOrganizationName:         String? {return self.issuer(oid: OID_OrganizationName       )}
-    public var  issuerStreetAddress:            String? {return self.issuer(oid: OID_StreetAddress          )}
-    public var  issuerLocalityName:             String? {return self.issuer(oid: OID_LocalityName           )}
-    public var  issuerStateOrProvinceName:      String? {return self.issuer(oid: OID_StateOrProvinceName    )}
-    public var  issuerCountryName:              String? {return self.issuer(oid: OID_CountryName            )}
-    public var  issuerEMail:                    String? {return self.issuer(oid: OID_eMail                  )}
-    
-    
-    
-    
+    public func subject(dn: ASN1DistinguishedNames) -> String? {
+        return subject(oid: dn.oid)
+    }
 
     /// Gets the notBefore date from the validity period of the certificate.
     public var notBefore: Date? {
@@ -284,8 +242,8 @@ public class X509Certificate: CustomStringConvertible {
     }
 
     /// Gets the informations of the public key from this certificate.
-    public var publicKey: PublicKey? {
-        return block1[X509BlockPosition.publicKey].map(PublicKey.init)
+    public var publicKey: X509PublicKey? {
+        return block1[X509BlockPosition.publicKey].map(X509PublicKey.init)
     }
 
     /// Get a list of critical extension OID codes
@@ -321,26 +279,26 @@ public class X509Certificate: CustomStringConvertible {
     // Format subject/issuer information in RFC1779
     private func blockDistinguishedName(block: ASN1Object) -> String {
         var result = ""
-        let oidNames = [
-            ["2.5.4.3",  "CN"],           // commonName
-            ["2.5.4.46", "DNQ"],          // dnQualifier
-            ["2.5.4.5",  "SERIALNUMBER"], // serialNumber
-            ["2.5.4.42", "GIVENNAME"],    // givenName
-            ["2.5.4.4",  "SURNAME"],      // surname
-            ["2.5.4.11", "OU"],           // organizationalUnitName
-            ["2.5.4.10", "O"],            // organizationName
-            ["2.5.4.9",  "STREET"],       // streetAddress
-            ["2.5.4.7",  "L"],            // localityName
-            ["2.5.4.8",  "ST"],           // stateOrProvinceName
-            ["2.5.4.6",  "C"],            // countryName
-            ["1.2.840.113549.1.9.1", "E"] // e-mail
+        let oidNames: [ASN1DistinguishedNames] = [
+            .commonName,
+            .dnQualifier,
+            .serialNumber,
+            .givenName,
+            .surname,
+            .organizationalUnitName,
+            .organizationName,
+            .streetAddress,
+            .localityName,
+            .stateOrProvinceName,
+            .countryName,
+            .email
         ]
         for oidName in oidNames {
-            if let oidBlock = block.findOid(oidName[0]) {
+            if let oidBlock = block.findOid(oidName.oid) {
                 if !result.isEmpty {
                     result.append(", ")
                 }
-                result.append(oidName[1])
+                result.append(oidName.representation)
                 result.append("=")
                 if let value = oidBlock.parent?.sub?.last?.value as? String {
                     let specialChar = ",+=\n<>#;\\"
@@ -383,99 +341,7 @@ public class X509Certificate: CustomStringConvertible {
     }
 }
 
-public class PublicKey {
-    private let OID_ECPublicKey = "1.2.840.10045.2.1"
-    private let OID_RSAEncryption = "1.2.840.113549.1.1.1"
-
-    var pkBlock: ASN1Object!
-
-    init(pkBlock: ASN1Object) {
-        self.pkBlock = pkBlock
-    }
-
-    public var algOid: String? {
-        return pkBlock.sub(0)?.sub(0)?.value as? String
-    }
-
-    public var algName: String? {
-        return ASN1Object.oidDecodeMap[algOid ?? ""]
-    }
-
-    public var algParams: String? {
-        return pkBlock.sub(0)?.sub(1)?.value as? String
-    }
-
-    public var key: Data? {
-        guard
-            let algOid = algOid,
-            let keyData = pkBlock.sub(1)?.value as? Data else {
-                return nil
-        }
-
-        switch algOid {
-        case OID_ECPublicKey:
-            return keyData
-
-        case OID_RSAEncryption:
-            guard let publicKeyAsn1Objects = (try? ASN1DERDecoder.decode(data: keyData)) else {
-                return nil
-            }
-            guard let publicKeyModulus = publicKeyAsn1Objects.first?.sub(0)?.value as? Data else {
-                return nil
-            }
-            return publicKeyModulus
-
-        default:
-            return nil
-        }
-    }
-}
-
-public class X509Extension {
-    let block: ASN1Object
-
-    init(block: ASN1Object) {
-        self.block = block
-    }
-
-    public var oid: String? {
-        return block.sub(0)?.value as? String
-    }
-
-    public var name: String? {
-        return ASN1Object.oidDecodeMap[oid ?? ""]
-    }
-
-    public var isCritical: Bool {
-        if block.sub?.count ?? 0 > 2 {
-            return block.sub(1)?.value as? Bool ?? false
-        }
-        return false
-    }
-
-    public var value: Any? {
-        if let valueBlock = block.sub?.last {
-            return firstLeafValue(block: valueBlock)
-        }
-        return nil
-    }
-
-    var valueAsBlock: ASN1Object? {
-        return block.sub?.last
-    }
-
-    var valueAsStrings: [String] {
-        var result: [String] = []
-        for item in block.sub?.last?.sub?.last?.sub ?? [] {
-            if let name = item.value as? String {
-                result.append(name)
-            }
-        }
-        return result
-    }
-}
-
-private func firstLeafValue(block: ASN1Object) -> Any? {
+func firstLeafValue(block: ASN1Object) -> Any? {
     if let sub = block.sub?.first {
         return firstLeafValue(block: sub)
     }
