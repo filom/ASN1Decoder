@@ -134,6 +134,11 @@ public class X509Certificate: CustomStringConvertible {
         return nil
     }
 
+    public func issuer(dn: ASN1DistinguishedNames) -> String? {
+        return issuer(oid: dn.oid)
+    }
+    
+    
     /// Returns the subject (subject distinguished name) value from the certificate as a String.
     public var subjectDistinguishedName: String? {
         if let subjectBlock = block1[X509BlockPosition.subject] {
