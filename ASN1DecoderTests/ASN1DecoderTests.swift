@@ -34,11 +34,14 @@ class ASN1DecoderTests: XCTestCase {
                        "0836BAA2556864172078584638D85C34")
         XCTAssertEqual(x509.subjectDistinguishedName,
                        "CN=www.digicert.com, SERIALNUMBER=5299537-0142, OU=SRE, O=\"DigiCert, Inc.\", L=Lehi, ST=Utah, C=US")
+        
+        XCTAssertEqual(x509.commonName, "www.digicert.com")
     }
 
     func testDecoding() {
         var serialNumber = ""
         var subject = ""
+        var commonName = ""
         
         if let certData = Data(base64Encoded: cert) {
             do {
@@ -48,6 +51,8 @@ class ASN1DecoderTests: XCTestCase {
                 
                 subject = x509.subjectDistinguishedName ?? ""
                 
+                commonName = x509.commonName ?? ""
+                
             } catch {
                 print(error)
             }
@@ -56,6 +61,8 @@ class ASN1DecoderTests: XCTestCase {
         XCTAssertEqual(serialNumber, "59A2F004")
         
         XCTAssertEqual(subject, "CN=John Smith, L=New York, C=US, E=john@mail.com")
+        
+        XCTAssertEqual(commonName, "John Smith")
     }
     
     let cert =

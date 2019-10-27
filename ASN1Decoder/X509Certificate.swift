@@ -34,6 +34,7 @@ public class X509Certificate: CustomStringConvertible {
     private let OID_ExtendedKeyUsage = "2.5.29.37"
     private let OID_SubjectAltName = "2.5.29.17"
     private let OID_IssuerAltName = "2.5.29.18"
+    private let OID_CommonName = kSecOIDCommonName as String
 
     enum X509BlockPosition : Int {
         case version = 0
@@ -162,6 +163,11 @@ public class X509Certificate: CustomStringConvertible {
         }
         return nil
     }
+    
+    public var commonName: String? {
+        return self.subject(oid: OID_CommonName)
+    }
+    
 
     /// Gets the notBefore date from the validity period of the certificate.
     public var notBefore: Date? {
