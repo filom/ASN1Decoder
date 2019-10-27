@@ -34,18 +34,20 @@ public class X509Certificate: CustomStringConvertible {
     private let OID_ExtendedKeyUsage        = "2.5.29.37"
     private let OID_SubjectAltName          = "2.5.29.17"
     private let OID_IssuerAltName           = "2.5.29.18"
-    private let OID_CommonName              = kSecOIDCommonName                as String
+    
+    private let OID_CommonName              = "2.5.4.3"
+    private let OID_Surname                 = "2.5.4.4"
+    private let OID_SerialNumber            = "2.5.4.5"
+    private let OID_CountryName             = "2.5.4.6"
+    private let OID_LocalityName            = "2.5.4.7"
+    private let OID_StateOrProvinceName     = "2.5.4.8"
+    private let OID_StreetAddress           = "2.5.4.9"
+    private let OID_OrganizationName        = "2.5.4.10"
+    private let OID_OrganizationalUnitName  = "2.5.4.11"
+    private let OID_GivenName               = "2.5.4.42"
     private let OID_DnQualifier             = "2.5.4.46"
-    private let OID_SerialNumber            = kSecOIDSerialNumber              as String
-    private let OID_GivenName               = kSecOIDGivenName                 as String
-    private let OID_Surname                 = kSecOIDSurname                   as String
-    private let OID_OrganizationalUnitName  = kSecOIDOrganizationalUnitName    as String
-    private let OID_OrganizationName        = kSecOIDOrganizationName          as String
-    private let OID_StreetAddress           = kSecOIDStreetAddress             as String
-    private let OID_LocalityName            = kSecOIDLocalityName              as String
-    private let OID_StateOrProvinceName     = kSecOIDStateProvinceName         as String
-    private let OID_CountryName             = kSecOIDCountryName               as String
-    private let OID_eMail                   = kSecOIDEmailAddress              as String
+    private let OID_eMail                   = "1.2.840.113549.1.9.1"
+
     
     
     enum X509BlockPosition : Int {
