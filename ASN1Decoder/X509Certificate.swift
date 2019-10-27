@@ -30,12 +30,24 @@ public class X509Certificate: CustomStringConvertible {
     private static let beginPemBlock = "-----BEGIN CERTIFICATE-----"
     private static let endPemBlock   = "-----END CERTIFICATE-----"
 
-    private let OID_KeyUsage = "2.5.29.15"
-    private let OID_ExtendedKeyUsage = "2.5.29.37"
-    private let OID_SubjectAltName = "2.5.29.17"
-    private let OID_IssuerAltName = "2.5.29.18"
-    private let OID_CommonName = kSecOIDCommonName as String
-
+    private let OID_KeyUsage                = "2.5.29.15"
+    private let OID_ExtendedKeyUsage        = "2.5.29.37"
+    private let OID_SubjectAltName          = "2.5.29.17"
+    private let OID_IssuerAltName           = "2.5.29.18"
+    private let OID_CommonName              = kSecOIDCommonName                as String
+    private let OID_DnQualifier             = "2.5.4.46"
+    private let OID_SerialNumber            = kSecOIDSerialNumber              as String
+    private let OID_GivenName               = kSecOIDGivenName                 as String
+    private let OID_Surname                 = kSecOIDSurname                   as String
+    private let OID_OrganizationalUnitName  = kSecOIDOrganizationalUnitName    as String
+    private let OID_OrganizationName        = kSecOIDOrganizationName          as String
+    private let OID_StreetAddress           = kSecOIDStreetAddress             as String
+    private let OID_LocalityName            = kSecOIDLocalityName              as String
+    private let OID_StateOrProvinceName     = kSecOIDStateProvinceName         as String
+    private let OID_CountryName             = kSecOIDCountryName               as String
+    private let OID_eMail                   = kSecOIDEmailAddress              as String
+    
+    
     enum X509BlockPosition : Int {
         case version = 0
         case serialNumber = 1
@@ -164,9 +176,35 @@ public class X509Certificate: CustomStringConvertible {
         return nil
     }
     
-    public var commonName: String? {
-        return self.subject(oid: OID_CommonName)
-    }
+    public var  subjectCommonName:               String? {return self.subject(oid: OID_CommonName)}
+    public var  subjectDnQualifier:              String? {return self.subject(oid: OID_DnQualifier            )}
+    public var  subjectSerialNumber:             String? {return self.subject(oid: OID_SerialNumber    )}
+    public var  subjectGivenName:                String? {return self.subject(oid: OID_GivenName              )}
+    public var  subjectSurname:                  String? {return self.subject(oid: OID_Surname                )}
+    public var  subjectOrganizationalUnitName:   String? {return self.subject(oid: OID_OrganizationalUnitName )}
+    public var  subjectOrganizationName:         String? {return self.subject(oid: OID_OrganizationName       )}
+    public var  subjectStreetAddress:            String? {return self.subject(oid: OID_StreetAddress          )}
+    public var  subjectLocalityName:             String? {return self.subject(oid: OID_LocalityName           )}
+    public var  subjectStateOrProvinceName:      String? {return self.subject(oid: OID_StateOrProvinceName    )}
+    public var  subjectCountryName:              String? {return self.subject(oid: OID_CountryName            )}
+    public var  subjectEMail:                    String? {return self.subject(oid: OID_eMail                  )}
+    
+    
+    public var  issuerCommonName:               String? {return self.issuer(oid: OID_CommonName)}
+    public var  issuerDnQualifier:              String? {return self.issuer(oid: OID_DnQualifier            )}
+    public var  issuerSerialNumber:             String? {return self.issuer(oid: OID_SerialNumber    )}
+    public var  issuerGivenName:                String? {return self.issuer(oid: OID_GivenName              )}
+    public var  issuerSurname:                  String? {return self.issuer(oid: OID_Surname                )}
+    public var  issuerOrganizationalUnitName:   String? {return self.issuer(oid: OID_OrganizationalUnitName )}
+    public var  issuerOrganizationName:         String? {return self.issuer(oid: OID_OrganizationName       )}
+    public var  issuerStreetAddress:            String? {return self.issuer(oid: OID_StreetAddress          )}
+    public var  issuerLocalityName:             String? {return self.issuer(oid: OID_LocalityName           )}
+    public var  issuerStateOrProvinceName:      String? {return self.issuer(oid: OID_StateOrProvinceName    )}
+    public var  issuerCountryName:              String? {return self.issuer(oid: OID_CountryName            )}
+    public var  issuerEMail:                    String? {return self.issuer(oid: OID_eMail                  )}
+    
+    
+    
     
 
     /// Gets the notBefore date from the validity period of the certificate.

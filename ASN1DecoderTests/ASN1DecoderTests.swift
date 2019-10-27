@@ -35,7 +35,19 @@ class ASN1DecoderTests: XCTestCase {
         XCTAssertEqual(x509.subjectDistinguishedName,
                        "CN=www.digicert.com, SERIALNUMBER=5299537-0142, OU=SRE, O=\"DigiCert, Inc.\", L=Lehi, ST=Utah, C=US")
         
-        XCTAssertEqual(x509.commonName, "www.digicert.com")
+        XCTAssertEqual(x509.subjectCommonName, "www.digicert.com")
+        XCTAssertEqual(x509.subjectSerialNumber, "5299537-0142")
+        XCTAssertEqual(x509.subjectOrganizationalUnitName, "SRE")
+        XCTAssertEqual(x509.subjectOrganizationName, "DigiCert, Inc.")
+        XCTAssertEqual(x509.subjectLocalityName, "Lehi")
+        XCTAssertEqual(x509.subjectStateOrProvinceName, "Utah")
+        XCTAssertEqual(x509.subjectCountryName, "US")
+        
+        XCTAssertEqual(x509.issuerDistinguishedName,"CN=DigiCert SHA2 Extended Validation Server CA, OU=www.digicert.com, O=DigiCert Inc, C=US")
+        XCTAssertEqual(x509.issuerCommonName, "DigiCert SHA2 Extended Validation Server CA")
+        XCTAssertEqual(x509.issuerOrganizationalUnitName, "www.digicert.com")
+        XCTAssertEqual(x509.issuerOrganizationName, "DigiCert Inc")
+        XCTAssertEqual(x509.issuerCountryName, "US")
     }
 
     func testDecoding() {
@@ -51,7 +63,7 @@ class ASN1DecoderTests: XCTestCase {
                 
                 subject = x509.subjectDistinguishedName ?? ""
                 
-                commonName = x509.commonName ?? ""
+                commonName = x509.subjectCommonName ?? ""
                 
             } catch {
                 print(error)
