@@ -53,7 +53,9 @@ class ASN1DecoderTests: XCTestCase {
     func testDecoding() {
         var serialNumber = ""
         var subject = ""
-        var commonName = ""
+        var subjectCommonName = ""
+        var issuer = ""
+        var issuerEMail = ""
         
         if let certData = Data(base64Encoded: cert) {
             do {
@@ -63,7 +65,10 @@ class ASN1DecoderTests: XCTestCase {
                 
                 subject = x509.subjectDistinguishedName ?? ""
                 
-                commonName = x509.subject(dn:.commonName) ?? ""
+                subjectCommonName = x509.subject(dn:.commonName) ?? ""
+                
+                issuer = x509.issuerDistinguishedName ?? ""
+                issuerEMail = x509.issuer(dn: .email) ?? ""
                 
             } catch {
                 print(error)
@@ -73,8 +78,11 @@ class ASN1DecoderTests: XCTestCase {
         XCTAssertEqual(serialNumber, "59A2F004")
         
         XCTAssertEqual(subject, "CN=John Smith, L=New York, C=US, E=john@mail.com")
+        XCTAssertEqual(subjectCommonName, "John Smith")
         
-        XCTAssertEqual(commonName, "John Smith")
+        XCTAssertEqual(issuer, "CN=John Smith, L=New York, C=US, E=john@mail.com")
+        XCTAssertEqual(issuerEMail, "john@mail.com")
+        
     }
     
     let cert =
