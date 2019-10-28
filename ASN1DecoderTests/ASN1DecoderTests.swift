@@ -30,8 +30,10 @@ class ASN1DecoderTests: XCTestCase {
 
     func testDecodingPEM() throws {
         let x509 = try X509Certificate(data: certPEMData)
-        XCTAssertEqual(x509.serialNumber?.hexEncodedString(),
-                       "0836BAA2556864172078584638D85C34")
+        
+        XCTAssertEqual(x509.version,3)
+        
+        
         XCTAssertEqual(x509.subjectDistinguishedName,
                        "CN=www.digicert.com, SERIALNUMBER=5299537-0142, OU=SRE, O=\"DigiCert, Inc.\", L=Lehi, ST=Utah, C=US")
         
@@ -48,6 +50,51 @@ class ASN1DecoderTests: XCTestCase {
         XCTAssertEqual(x509.issuer(dn:.organizationalUnitName), "www.digicert.com")
         XCTAssertEqual(x509.issuer(dn:.organizationName), "DigiCert Inc")
         XCTAssertEqual(x509.issuer(dn:.countryName), "US")
+        
+        XCTAssertEqual(x509.serialNumber?.hexEncodedString(),
+        "0836BAA2556864172078584638D85C34")
+        
+        XCTAssertEqual(x509.notBefore?.description, "2018-06-26 00:00:00 +0000")
+        XCTAssertEqual(x509.notAfter?.description, "2020-06-30 12:00:00 +0000")
+
+        
+        
+        
+  
+        XCTAssertEqual(x509.nonCriticalExtensionOIDs,["2.5.29.35", "2.5.29.14", "2.5.29.17", "2.5.29.37", "2.5.29.31", "2.5.29.32", "1.3.6.1.5.5.7.1.1", "1.3.6.1.4.1.11129.2.4.2"])
+        XCTAssertEqual(x509.criticalExtensionOIDs,["2.5.29.15", "2.5.29.19"])
+        
+        XCTAssertEqual(x509.keyUsage, [true, false, true, false, false, false, false, false]) // (2.5.29.15)
+              
+        XCTAssertEqual(x509.extendedKeyUsage,["1.3.6.1.5.5.7.3.1", "1.3.6.1.5.5.7.3.2"])  // (2.5.29.37)
+              
+              
+        XCTAssertEqual(x509.subjectAlternativeNames,["www.digicert.com", "digicert.com", "content.digicert.com", "www.origin.digicert.com", "login.digicert.com", "api.digicert.com", "ws.digicert.com"]) // (2.5.29.17)
+        XCTAssertEqual(x509.issuerAlternativeNames,[])
+        
+        
+        XCTAssertEqual(x509.extensionObject(oid: "2.5.29.19")?.value as? Bool, nil)  // BasicConstraints        (2.5.29.19)  // FIXME  How to read the basic constraints Bool and Integer? Wrong ASN.1 code in certificate?
+        XCTAssertEqual(x509.extensionObject(oid: "2.5.29.31")?.valueAsStrings,[])  // CRLDistributionPoints   (2.5.29.31)    // FIXME  How to read (2.5.29.31)
+        XCTAssertEqual(x509.extensionObject(oid: "2.5.29.32")?.valueAsStrings,[])  // CertificatePolicies     (2.5.29.32)    // FIXME
+        XCTAssertEqual(x509.extensionObject(oid: "2.5.29.35")?.valueAsStrings,[])  // AuthorityKeyIdentifier  (2.5.29.35)    // FIXME
+        XCTAssertEqual((x509.extensionObject(oid: "2.5.29.14")?.value as? Data)?.hexEncodedString(), nil)  // SubjectKeyIdentifier    (2.5.29.14)                   // FIXME should be 6CB04356FE3DE812ECD912F563D5C4CA07AFB076
+        XCTAssertEqual(x509.extensionObject(oid: "1.3.6.1.5.5.7.1.1")?.valueAsStrings,[])  // AuthorityInfoAccess    (1.3.6.1.5.5.7.1.1)                            // FIXME
+        XCTAssertEqual(x509.extensionObject(oid: "1.3.6.1.4.1.11129.2.4.2")?.valueAsStrings,[])  // Extended validation certificates    (1.3.6.1.4.1.11129.2.4.2)   // FIXME
+        
+       
+        
+        XCTAssertEqual(x509.publicKey?.algName, "rsaEncryption")
+        XCTAssertEqual(x509.publicKey!.key!.count*8,4096)
+        XCTAssertEqual(x509.publicKey?.algParams, nil)
+        XCTAssertEqual(x509.publicKey?.key?.hexEncodedString(), "CE9F85CA393030B7F69869B49C105D503B2563D0E568D4D9A5CA2CD63595B23E0D298B9DE0814A04F7C09E354933FBAB1C118A96358EA5DEA281E7AA49248A8D426A3D36858EF24D86FE34C88C5146A8D59822ADB78B8F87A9A5E2D7F1FF6961606B3935AA4CB200E41003FA79E9B1BD9B93A4FC804CFC16672EA5492C624EC7D8A1806D5D23D0EBEAF6A9FBC41A3D16AEDEDF6C11DD9CC5EE08C7B80B75A606DEFC6C61FDC1C9C29348AB72ADB917D50CB476C4B1CBE182336113C44D6031AEEF468990FD9A19A3C21BE79905A7A9484FA50E3A491DCA225DA563D7219665B19479C247A0583B093FB5EFEE713458C918D7ED3988D62DAF3651861967070D80A0C18D23EB6C0572D029E65F585994DF46E19335FDF699AF2182777F57D018B6A8E389D01237649C8BE99B41CC82F6A06029D05679E1252B73C98CF7DB87E558B3D2A79ECE41E34CB6BE8EE56D07756CA151953E0F847AC0E6D840C6796E2623461B40423320F0455011F67311DAF45863B92511CB1F2A2DF2D12B5CCF43885E5C09BCDF7237AEA229364875BEBDBB8F6A03221D333DFB796BD2844EF995B070CEDF26F9F525F4763C32C0688DD052FECE2E1487DF651F42C93ED480AAD399B61F04B1880BE20D19790DEEBA30464376FBB4DEC5004131EF5A7C3432BEC981B8ED9F40DE50A2D8C2C45683EB29AA81532475866DBF5121BFB79717AFEE722A39")
+        
+
+        XCTAssertEqual(x509.sigAlgName, "sha256WithRSAEncryption")
+               XCTAssertEqual(x509.sigAlgParams?.hexEncodedString(), nil)
+               XCTAssertEqual(x509.signature?.hexEncodedString(separation: ":"),                              "8F:71:72:DE:D4:C8:C6:26:DC:1F:8A:1B:88:D5:2E:77:19:DA:24:14:07:25:F7:8A:2E:A1:6C:56:77:B0:12:7E:CB:9F:53:2C:6C:16:BA:31:0E:13:70:C5:DF:26:40:E1:FB:57:77:A1:65:38:A8:B7:A3:FE:C4:C6:4E:AD:8C:60:27:1E:42:5D:B7:0B:B7:4E:D1:64:74:F4:C3:F3:DF:D3:9D:A0:AB:B6:CF:19:B1:EC:AE:3B:65:5E:AD:4C:0E:7F:1C:F0:3F:85:9E:FD:AA:4A:01:38:7F:FF:70:43:58:0C:53:82:0A:A2:36:8E:E1:81:FD:15:8A:1A:70:0F:29:B9:75:25:2B:5A:41:0A:E0:8A:D2:32:72:93:20:2D:0F:DC:F8:A1:30:FF:64:B0:50:3A:64:C9:E1:5C:09:E6:B1:CD:09:F7:48:F1:A9:11:F4:E6:18:CB:1F:46:09:B7:96:62:FE:49:09:C2:32:CC:FC:AF:65:EE:9C:78:80:84:9D:11:A5:89:4F:C4:CE:BC:B2:5A:1A:B8:57:1F:F3:45:E0:60:A1:7E:B1:39:67:D6:D5:90:28:B5:AD:1E:B7:3A:3D:A5:25:A3:39:DA:EB:8F:52:3B:AB:46:C0:84:BD:5E:52:E5:C4:F0:54:A6:E8:CF:19:A2:05:BF:65:89:0E:1C:4D:AE")
+               XCTAssertEqual(x509.signature?.count,256)
+        
+        
     }
 
     func testDecoding() {
@@ -162,6 +209,8 @@ j1I7q0bAhL1eUuXE8FSm6M8ZogW/ZYkOHE2u
 
 extension Data {
     func hexEncodedString(separation: String = "") -> String {
-        return reduce("") {$0 + String(format: "%02X\(separation)", $1)}
+        var hexString = reduce("") {$0 + String(format: "%02X\(separation)", $1)}
+        if separation != "" {hexString.removeLast()}
+        return hexString
     }
 }
