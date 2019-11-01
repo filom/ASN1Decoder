@@ -83,6 +83,16 @@ public class X509Certificate: CustomStringConvertible {
         return asn1.reduce("") { $0 + "\($1.description)\n" }
     }
 
+    public var encodedTBSCertificate:Data? {
+        return self.block1.rawValue
+    }
+    
+    public var encodedCertificate:Data? {
+        var length = UInt16(self.asn1[0].rawValue!.count).bigEndian
+        return Data([UInt8(0x30),UInt8(0x82)]) + Data(bytes: &length, count: 2) + (self.asn1[0].rawValue ?? Data())
+    }
+    
+    
     /// Checks that the given date is within the certificate's validity period.
     public func checkValidity(_ date: Date = Date()) -> Bool {
         if let notBefore = notBefore, let notAfter = notAfter {
