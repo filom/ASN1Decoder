@@ -26,10 +26,13 @@
 import XCTest
 import CryptoKit
 
+
+
 @testable import ASN1Decoder
 
 class ASN1DecoderTests: XCTestCase {
-
+    
+    @available(OSX 10.12, *)
     func testDecodingPEM() throws {
         let x509 = try X509Certificate(data: certPEMData)
         
@@ -54,23 +57,23 @@ class ASN1DecoderTests: XCTestCase {
         XCTAssertEqual(x509.issuer(dn:.countryName), "US")
         
         XCTAssertEqual(x509.serialNumber?.hexEncodedString(),
-        "0836BAA2556864172078584638D85C34")
+                       "0836BAA2556864172078584638D85C34")
         
         XCTAssertEqual(x509.notBefore?.description, "2018-06-26 00:00:00 +0000")
         XCTAssertEqual(x509.notAfter?.description, "2020-06-30 12:00:00 +0000")
-
         
         
         
-  
+        
+        
         XCTAssertEqual(x509.nonCriticalExtensionOIDs,["2.5.29.35", "2.5.29.14", "2.5.29.17", "2.5.29.37", "2.5.29.31", "2.5.29.32", "1.3.6.1.5.5.7.1.1", "1.3.6.1.4.1.11129.2.4.2"])
         XCTAssertEqual(x509.criticalExtensionOIDs,["2.5.29.15", "2.5.29.19"])
         
         XCTAssertEqual(x509.keyUsage, [true, false, true, false, false, false, false, false]) // (2.5.29.15)
-              
+        
         XCTAssertEqual(x509.extendedKeyUsage,["1.3.6.1.5.5.7.3.1", "1.3.6.1.5.5.7.3.2"])  // (2.5.29.37)
-              
-              
+        
+        
         XCTAssertEqual(x509.subjectAlternativeNames,["www.digicert.com", "digicert.com", "content.digicert.com", "www.origin.digicert.com", "login.digicert.com", "api.digicert.com", "ws.digicert.com"]) // (2.5.29.17)
         XCTAssertEqual(x509.issuerAlternativeNames,[])
         
@@ -83,7 +86,7 @@ class ASN1DecoderTests: XCTestCase {
         XCTAssertEqual(x509.extensionObject(oid: "1.3.6.1.5.5.7.1.1")?.valueAsStrings,[])  // AuthorityInfoAccess    (1.3.6.1.5.5.7.1.1)                            // FIXME
         XCTAssertEqual(x509.extensionObject(oid: "1.3.6.1.4.1.11129.2.4.2")?.valueAsStrings,[])  // Extended validation certificates    (1.3.6.1.4.1.11129.2.4.2)   // FIXME
         
-       
+        
         
         XCTAssertEqual(x509.publicKey?.algName, "rsaEncryption")
         XCTAssertEqual(x509.publicKey!.key!.count*8,4096)
@@ -92,23 +95,52 @@ class ASN1DecoderTests: XCTestCase {
         
         if #available(OSX 10.15,iOS 13.0, *) {
             
-            XCTAssertEqual(SHA256.hash(data: x509.encodedTBSCertificate!).hexEncodedString(separation: ":"),"8D:41:ED:64:43:1F:22:2E:FD:A7:0B:56:04:D2:7C:7D:E3:09:42:85:6D:3E:99:7F:C2:B8:F2:CA:D7:0C:85:07")
+            XCTAssertEqual(SHA256.hash(data: x509.encodedTBSCertificate!).hexEncodedString(separation: ":"),"83:BF:80:95:73:69:D2:77:CB:58:93:64:BC:40:C5:AD:91:B9:73:4E:AD:B7:BC:F6:96:2A:48:EF:7F:F9:02:1E")
             XCTAssertEqual(SHA256.hash(data: x509.encodedCertificate!).hexEncodedString(separation: ":"),"C7:32:93:B5:94:A3:52:18:4A:D8:7E:5A:95:FB:39:B7:3B:0F:F6:80:02:A4:AB:EA:5E:74:F3:50:24:55:DB:D3" )
-
+            
         } else {
-                // Fallback on earlier versions
-            }
+            // Fallback on earlier versions
             
-            
-
+        }
+                
+        
         XCTAssertEqual(x509.sigAlgName, "sha256WithRSAEncryption")
-               XCTAssertEqual(x509.sigAlgParams?.hexEncodedString(), nil)
-               XCTAssertEqual(x509.signature?.hexEncodedString(separation: ":"),                              "8F:71:72:DE:D4:C8:C6:26:DC:1F:8A:1B:88:D5:2E:77:19:DA:24:14:07:25:F7:8A:2E:A1:6C:56:77:B0:12:7E:CB:9F:53:2C:6C:16:BA:31:0E:13:70:C5:DF:26:40:E1:FB:57:77:A1:65:38:A8:B7:A3:FE:C4:C6:4E:AD:8C:60:27:1E:42:5D:B7:0B:B7:4E:D1:64:74:F4:C3:F3:DF:D3:9D:A0:AB:B6:CF:19:B1:EC:AE:3B:65:5E:AD:4C:0E:7F:1C:F0:3F:85:9E:FD:AA:4A:01:38:7F:FF:70:43:58:0C:53:82:0A:A2:36:8E:E1:81:FD:15:8A:1A:70:0F:29:B9:75:25:2B:5A:41:0A:E0:8A:D2:32:72:93:20:2D:0F:DC:F8:A1:30:FF:64:B0:50:3A:64:C9:E1:5C:09:E6:B1:CD:09:F7:48:F1:A9:11:F4:E6:18:CB:1F:46:09:B7:96:62:FE:49:09:C2:32:CC:FC:AF:65:EE:9C:78:80:84:9D:11:A5:89:4F:C4:CE:BC:B2:5A:1A:B8:57:1F:F3:45:E0:60:A1:7E:B1:39:67:D6:D5:90:28:B5:AD:1E:B7:3A:3D:A5:25:A3:39:DA:EB:8F:52:3B:AB:46:C0:84:BD:5E:52:E5:C4:F0:54:A6:E8:CF:19:A2:05:BF:65:89:0E:1C:4D:AE")
-               XCTAssertEqual(x509.signature?.count,256)
+        XCTAssertEqual(x509.sigAlgParams?.hexEncodedString(), nil)
+        XCTAssertEqual(x509.signature?.hexEncodedString(separation: ":"),                              "8F:71:72:DE:D4:C8:C6:26:DC:1F:8A:1B:88:D5:2E:77:19:DA:24:14:07:25:F7:8A:2E:A1:6C:56:77:B0:12:7E:CB:9F:53:2C:6C:16:BA:31:0E:13:70:C5:DF:26:40:E1:FB:57:77:A1:65:38:A8:B7:A3:FE:C4:C6:4E:AD:8C:60:27:1E:42:5D:B7:0B:B7:4E:D1:64:74:F4:C3:F3:DF:D3:9D:A0:AB:B6:CF:19:B1:EC:AE:3B:65:5E:AD:4C:0E:7F:1C:F0:3F:85:9E:FD:AA:4A:01:38:7F:FF:70:43:58:0C:53:82:0A:A2:36:8E:E1:81:FD:15:8A:1A:70:0F:29:B9:75:25:2B:5A:41:0A:E0:8A:D2:32:72:93:20:2D:0F:DC:F8:A1:30:FF:64:B0:50:3A:64:C9:E1:5C:09:E6:B1:CD:09:F7:48:F1:A9:11:F4:E6:18:CB:1F:46:09:B7:96:62:FE:49:09:C2:32:CC:FC:AF:65:EE:9C:78:80:84:9D:11:A5:89:4F:C4:CE:BC:B2:5A:1A:B8:57:1F:F3:45:E0:60:A1:7E:B1:39:67:D6:D5:90:28:B5:AD:1E:B7:3A:3D:A5:25:A3:39:DA:EB:8F:52:3B:AB:46:C0:84:BD:5E:52:E5:C4:F0:54:A6:E8:CF:19:A2:05:BF:65:89:0E:1C:4D:AE")
+        XCTAssertEqual(x509.signature?.count,256)
         
         
     }
+    
+    
 
+    @available(OSX 10.12,iOS 10.0, *)
+    func testSignature()  throws  {
+        
+        let publicKeyCA = try X509PublicKey(data: publicKeyCaPEMData)
+        let x509 = try X509Certificate(data: certPEMData)
+        
+        let encodedKey = publicKeyCA.encodedKey()
+        
+        
+        // creating a SecureKey
+        var attributes: CFDictionary {
+            return [kSecAttrKeyType         : kSecAttrKeyTypeRSA,
+                    kSecAttrKeyClass        : kSecAttrKeyClassPublic,
+                    kSecAttrKeySizeInBits   : 2048] as CFDictionary
+        }
+        
+        var error: Unmanaged<CFError>? = nil
+        guard let secKey = SecKeyCreateWithData(encodedKey! as CFData, attributes, &error) else {
+            print(error.debugDescription)
+            throw  error as! Error
+        }
+        
+        XCTAssertTrue(SecKeyVerifySignature(secKey, .rsaSignatureMessagePKCS1v15SHA256, x509.encodedTBSCertificate! as CFData, x509.signature! as CFData, &error))
+
+    }
+    
+    
     func testDecoding() {
         var serialNumber = ""
         var subject = ""
@@ -163,7 +195,7 @@ class ASN1DecoderTests: XCTestCase {
             "OeAp80GDRAHpjB3qYhzhebiRiM+Bbqva6f4bxNmDNQtL0jt0a8KeyQrFNdAhgjYk" +
             "AKTucThCu1laJKGKABK90dMoLtbJFxfRhjzmjX9TJGYJgCnRNDDnXpVUOspv2YeH" +
     "vC9gOdRhaA=="
-
+    
     let certPEM = """
 -----BEGIN CERTIFICATE-----
 MIIItzCCB5+gAwIBAgIQCDa6olVoZBcgeFhGONhcNDANBgkqhkiG9w0BAQsFADB1
@@ -216,6 +248,58 @@ j1I7q0bAhL1eUuXE8FSm6M8ZogW/ZYkOHE2u
 -----END CERTIFICATE-----
 """
     var certPEMData: Data { return certPEM.data(using: .utf8)! }
+    
+    
+    let publicKeyCaPEM = """
+-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA11OkBFH4maYWSEtnJ6qT
+SdA57QywsACH8WcohoWMjmPavLFAOOLT9eylBRi4PT7FmRcy7BiM+vEMpmQhhcsH
+EDSwUogrH2ib0rGPErCz0ueIHx/vOHdUU1+AeT8uGqqoHksrDau3Y7k1t30UvFlL
+31FK0qHiDOKQgodqrurXZNaYVej9rxpQbFS8EfL9SvKdu38O9NW+jhaJElXYwHE0
+7vbcLezEhyWGjdgh5LBNDIncOSYX3fbXlIXYBCFwnW9v/1y6GeFFy1ZXKH4cDUFX
+qre4J7ux5Poq7yEjdRqtLZuGNYycd7VzrdiULeTzDJ3uwU5ifhfAcZ4s3vH5ECgZ
+MwIDAQAB
+-----END PUBLIC KEY-----
+"""
+    
+    var publicKeyCaPEMData: Data { return publicKeyCaPEM.data(using: .utf8)! }
+    
+    
+    let CaPEM = """
+-----BEGIN CERTIFICATE-----
+MIIEtjCCA56gAwIBAgIQDHmpRLCMEZUgkmFf4msdgzANBgkqhkiG9w0BAQsFADBs
+MQswCQYDVQQGEwJVUzEVMBMGA1UEChMMRGlnaUNlcnQgSW5jMRkwFwYDVQQLExB3
+d3cuZGlnaWNlcnQuY29tMSswKQYDVQQDEyJEaWdpQ2VydCBIaWdoIEFzc3VyYW5j
+ZSBFViBSb290IENBMB4XDTEzMTAyMjEyMDAwMFoXDTI4MTAyMjEyMDAwMFowdTEL
+MAkGA1UEBhMCVVMxFTATBgNVBAoTDERpZ2lDZXJ0IEluYzEZMBcGA1UECxMQd3d3
+LmRpZ2ljZXJ0LmNvbTE0MDIGA1UEAxMrRGlnaUNlcnQgU0hBMiBFeHRlbmRlZCBW
+YWxpZGF0aW9uIFNlcnZlciBDQTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoC
+ggEBANdTpARR+JmmFkhLZyeqk0nQOe0MsLAAh/FnKIaFjI5j2ryxQDji0/XspQUY
+uD0+xZkXMuwYjPrxDKZkIYXLBxA0sFKIKx9om9KxjxKws9LniB8f7zh3VFNfgHk/
+LhqqqB5LKw2rt2O5Nbd9FLxZS99RStKh4gzikIKHaq7q12TWmFXo/a8aUGxUvBHy
+/Urynbt/DvTVvo4WiRJV2MBxNO723C3sxIclho3YIeSwTQyJ3DkmF93215SF2AQh
+cJ1vb/9cuhnhRctWVyh+HA1BV6q3uCe7seT6Ku8hI3UarS2bhjWMnHe1c63YlC3k
+8wyd7sFOYn4XwHGeLN7x+RAoGTMCAwEAAaOCAUkwggFFMBIGA1UdEwEB/wQIMAYB
+Af8CAQAwDgYDVR0PAQH/BAQDAgGGMB0GA1UdJQQWMBQGCCsGAQUFBwMBBggrBgEF
+BQcDAjA0BggrBgEFBQcBAQQoMCYwJAYIKwYBBQUHMAGGGGh0dHA6Ly9vY3NwLmRp
+Z2ljZXJ0LmNvbTBLBgNVHR8ERDBCMECgPqA8hjpodHRwOi8vY3JsNC5kaWdpY2Vy
+dC5jb20vRGlnaUNlcnRIaWdoQXNzdXJhbmNlRVZSb290Q0EuY3JsMD0GA1UdIAQ2
+MDQwMgYEVR0gADAqMCgGCCsGAQUFBwIBFhxodHRwczovL3d3dy5kaWdpY2VydC5j
+b20vQ1BTMB0GA1UdDgQWBBQ901Cl1qCt7vNKYApl0yHU+PjWDzAfBgNVHSMEGDAW
+gBSxPsNpA/i/RwHUmCYaCALvY2QrwzANBgkqhkiG9w0BAQsFAAOCAQEAnbbQkIbh
+hgLtxaDwNBx0wY12zIYKqPBKikLWP8ipTa18CK3mtlC4ohpNiAexKSHc59rGPCHg
+4xFJcKx6HQGkyhE6V6t9VypAdP3THYUYUN9XR3WhfVUgLkc3UHKMf4Ib0mKPLQNa
+2sPIoc4sUqIAY+tzunHISScjl2SFnjgOrWNoPLpSgVh5oywM395t6zHyuqB8bPEs
+1OG9d4Q3A84ytciagRpKkk47RpqF/oOi+Z6Mo8wNXrM9zwR4jxQUezKcxwCmXMS1
+oVWNWlZopCJwqjyBcdmdqEU79OX2olHdx3ti6G8MdOu42vi/hw15UJGQmxg7kVkn
+8TUoE6smftX3eg==
+-----END CERTIFICATE-----
+"""
+    
+    var CaPEMData: Data { return CaPEM.data(using: .utf8)! }
+    
+    
+    
 }
 
 

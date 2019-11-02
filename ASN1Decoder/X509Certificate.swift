@@ -84,7 +84,8 @@ public class X509Certificate: CustomStringConvertible {
     }
 
     public var encodedTBSCertificate:Data? {
-        return self.block1.rawValue
+        var length = UInt16(self.block1.rawValue!.count).bigEndian
+        return Data([UInt8(0x30),UInt8(0x82)]) + Data(bytes: &length, count: 2) + (self.block1.rawValue ?? Data())
     }
     
     public var encodedCertificate:Data? {
