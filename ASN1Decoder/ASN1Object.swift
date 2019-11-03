@@ -146,3 +146,19 @@ public class ASN1Object : CustomStringConvertible {
         "2.5.4.9" : "streetAddress"
     ]
 }
+
+public class ASN1GeneralNames {
+    var otherName:String?
+    var rfc822Name:String?
+    var URI:String?
+    
+    init(asn1Object: ASN1Object) {
+        
+        switch asn1Object.identifier?.tagNumber().rawValue {
+        case 6:
+            self.URI = asn1Object.value as? String
+        default: break
+            
+        }
+    }
+}

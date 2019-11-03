@@ -212,6 +212,9 @@ public class X509Certificate: CustomStringConvertible {
         return nil
     }
 
+    
+    
+    
     /**
      Gets a boolean array representing bits of the KeyUsage extension, (OID = 2.5.29.15).
      ```
@@ -291,6 +294,30 @@ public class X509Certificate: CustomStringConvertible {
             .map(X509Extension.init)
     }
 
+    
+    public var crlDistributionPoints: [X509CrlDistributionPoint] {
+         var result: [X509CrlDistributionPoint] = []
+        
+        guard let crlDistPointsObject = extensionObject(oid: "2.5.29.31") else {
+            return result
+        }
+        
+        
+        // instance of class
+        guard ((crlDistPointsObject.block.sub?.last?.sub?.last?.sub?.last)?.subCount())! > 0 else {
+            return result
+        }
+        
+        for crlDistPointObject in ((crlDistPointsObject.block.sub?.last?.sub?.last?.sub!)!) {
+            
+            result.append(X509CrlDistributionPoint(asn1Object: crlDistPointObject))
+        }
+        
+         return result
+     }
+     
+    
+    
     // Format subject/issuer information in RFC1779
     private func blockDistinguishedName(block: ASN1Object) -> String {
         var result = ""
@@ -370,3 +397,35 @@ extension ASN1Object {
         return sub[index.rawValue]
     }
 }
+
+
+
+ 
+
+public class X509CrlDistributionPoint {
+    
+    var fullName:ASN1GeneralNames?
+    var nameRelativeToCRLIssuer:String?
+    var reasons:[Bool]?
+    var crlIssuer:ASN1GeneralNames?
+    
+    init(asn1Object: ASN1Object) {
+        
+        self.fullName = ASN1GeneralNames(asn1Object: (asn1Object.sub?.last?.sub?.last?.sub?.last)!)
+        
+    }
+    
+            
+            
+    //        if let oidBlock = block1.findOid(OID_KeyUsage) {
+    //             let data = oidBlock.parent?.sub?.last?.sub(0)?.value as? Data
+    //             let bits: UInt8 = data?.first ?? 0
+    //             for i in 0...7 {
+    //                 let value = bits & UInt8(1 << i) != 0
+    //                 result.insert(value, at: 0)
+    //             }
+    //         }
+
+}
+
+
