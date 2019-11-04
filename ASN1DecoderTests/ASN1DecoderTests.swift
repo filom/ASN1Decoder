@@ -133,6 +133,9 @@ class ASN1DecoderTests: XCTestCase {
         XCTAssertEqual(x509.crlDistributionPoints[0].fullName?.URI,"http://crl3.digicert.com/sha2-ev-server-g2.crl")
         XCTAssertEqual(x509.crlDistributionPoints[1].fullName?.URI,"http://crl4.digicert.com/sha2-ev-server-g2.crl")
         
+        XCTAssertEqual(x509.basicConstraints.isCA, false )
+        XCTAssertEqual(x509.basicConstraints.pathLengthConstraint, nil )
+        
         XCTAssertEqual(x509.nonCriticalExtensionOIDs,["2.5.29.35", "2.5.29.14", "2.5.29.17", "2.5.29.37", "2.5.29.31", "2.5.29.32", "1.3.6.1.5.5.7.1.1", "1.3.6.1.4.1.11129.2.4.2"])
         XCTAssertEqual(x509.criticalExtensionOIDs,["2.5.29.15", "2.5.29.19"])
         
@@ -140,9 +143,6 @@ class ASN1DecoderTests: XCTestCase {
         
         XCTAssertEqual(x509.extendedKeyUsage,["1.3.6.1.5.5.7.3.1", "1.3.6.1.5.5.7.3.2"])  // (2.5.29.37)
         
-        
-        XCTAssertEqual(x509.extensionObject(oid: "2.5.29.19")?.value as? Bool, nil)  // BasicConstraints        (2.5.29.19)  // FIXME  How to read the basic constraints Bool and Integer? Wrong ASN.1 code in certificate?
-
         XCTAssertEqual(x509.extensionObject(oid: "2.5.29.32")?.valueAsStrings,[])  // CertificatePolicies     (2.5.29.32)    // FIXME
         XCTAssertEqual(x509.extensionObject(oid: "2.5.29.35")?.valueAsStrings,[])  // AuthorityKeyIdentifier  (2.5.29.35)    // FIXME
         XCTAssertEqual((x509.extensionObject(oid: "2.5.29.14")?.value as? Data)?.hexEncodedString(), nil)  // SubjectKeyIdentifier    (2.5.29.14)                   // FIXME should be 6CB04356FE3DE812ECD912F563D5C4CA07AFB076

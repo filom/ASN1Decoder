@@ -295,8 +295,12 @@ public class X509Certificate: CustomStringConvertible {
     }
 
     
-    public var crlDistributionPoints: [X509CrlDistributionPoint] {
-         var result: [X509CrlDistributionPoint] = []
+    public var basicConstraints:X509ExtBasicContraints {
+        return X509ExtBasicContraints(asn1Object:(extensionObject(oid: "2.5.29.19")?.block)!)
+    }
+    
+    public var crlDistributionPoints: [X509ExtCrlDistributionPoint] {
+         var result: [X509ExtCrlDistributionPoint] = []
         
         guard let crlDistPointsObject = extensionObject(oid: "2.5.29.31") else {
             return result
@@ -310,7 +314,7 @@ public class X509Certificate: CustomStringConvertible {
         
         for crlDistPointObject in ((crlDistPointsObject.block.sub?.last?.sub?.last?.sub!)!) {
             
-            result.append(X509CrlDistributionPoint(asn1Object: crlDistPointObject))
+            result.append(X509ExtCrlDistributionPoint(asn1Object: crlDistPointObject))
         }
         
          return result
@@ -402,7 +406,7 @@ extension ASN1Object {
 
  
 
-public class X509CrlDistributionPoint {
+public class X509ExtCrlDistributionPoint {
     
     var fullName:ASN1GeneralNames?
     var nameRelativeToCRLIssuer:String?
@@ -426,6 +430,30 @@ public class X509CrlDistributionPoint {
     //             }
     //         }
 
+}
+
+
+public class X509ExtBasicContraints {
+    
+    var isCA:Bool? = false
+    var pathLengthConstraint:Int? = nil
+   
+
+    
+    init(asn1Object: ASN1Object) {
+        
+        
+        if let cAValue = asn1Object.sub?.last?.sub?.first?.value {
+            self.isCA = (cAValue as! Bool)
+        }
+        
+        
+        if let pathValue = asn1Object.sub?[2].value {
+            self.pathLengthConstraint = (pathValue as! Int)
+        }
+    }
+    
+ 
 }
 
 
