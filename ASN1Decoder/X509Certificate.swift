@@ -322,6 +322,28 @@ public class X509Certificate: CustomStringConvertible {
      
     
     
+    public var certificatePolicies: [X509ExtCertficatePolicy] {
+        var result: [X509ExtCertficatePolicy] = []
+       
+       guard let certficatePoliciesObject = extensionObject(oid: "2.5.29.32") else {
+           return result
+       }
+       
+       
+       // instance of class
+       guard ((certficatePoliciesObject.block.sub?.last?.sub?.last)?.subCount())! > 0 else {
+           return result
+       }
+       
+       for certficatePolicyObject in ((certficatePoliciesObject.block.sub?.last?.sub?.last?.sub!)!) {
+           
+           result.append(X509ExtCertficatePolicy(asn1Object: certficatePolicyObject))
+       }
+       
+        return result
+    }
+    
+    
     // Format subject/issuer information in RFC1779
     private func blockDistinguishedName(block: ASN1Object) -> String {
         var result = ""
@@ -431,6 +453,42 @@ public class X509ExtCrlDistributionPoint {
     //         }
 
 }
+
+
+public class X509ExtCertficatePolicy{
+    
+    var identifier:String?
+    var qualifierInfo:X509ExtCertficatePolicyQualifierInfo?
+    
+    init(asn1Object: ASN1Object) {
+        
+        self.identifier = (asn1Object.sub?[0].value as! String)
+        
+        guard asn1Object.subCount() > 1 else {
+            return
+        }
+            
+        self.qualifierInfo = X509ExtCertficatePolicyQualifierInfo(asn1Object: (asn1Object.sub?[1])!)
+        
+    }
+}
+
+
+public class X509ExtCertficatePolicyQualifierInfo {
+    
+    var identifier:String?
+    var qualifier:String?
+    
+    init(asn1Object: ASN1Object) {
+        
+        self.identifier = (asn1Object.sub?.first?.sub?.first?.value as! String)
+        self.qualifier = (asn1Object.sub?.first?.sub?.last?.value as! String)
+        
+    }
+}
+
+
+
 
 
 public class X509ExtBasicContraints {
