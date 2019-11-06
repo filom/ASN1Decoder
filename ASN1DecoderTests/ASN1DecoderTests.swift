@@ -140,7 +140,8 @@ class ASN1DecoderTests: XCTestCase {
         
         XCTAssertEqual(x509.certificatePolicies[1].identifier,"2.23.140.1.1")
 
-        XCTAssertEqual(x509.authorityKeyIdentifier.identifier?.hexEncodedString(separation: ":"),"3D:D3:50:A5:D6:A0:AD:EE:F3:4A:60:0A:65:D3:21:D4:F8:F8:D6:0F") 
+        XCTAssertEqual(x509.authorityKeyIdentifier.identifier?.hexEncodedString(separation: ":"),"3D:D3:50:A5:D6:A0:AD:EE:F3:4A:60:0A:65:D3:21:D4:F8:F8:D6:0F")
+        XCTAssertEqual(x509.subjectKeyIdentifier!.hexEncodedString(separation: ":"),"6C:B0:43:56:FE:3D:E8:12:EC:D9:12:F5:63:D5:C4:CA:07:AF:B0:76")
         
         XCTAssertEqual(x509.nonCriticalExtensionOIDs,["2.5.29.35", "2.5.29.14", "2.5.29.17", "2.5.29.37", "2.5.29.31", "2.5.29.32", "1.3.6.1.5.5.7.1.1", "1.3.6.1.4.1.11129.2.4.2"])
         XCTAssertEqual(x509.criticalExtensionOIDs,["2.5.29.15", "2.5.29.19"])

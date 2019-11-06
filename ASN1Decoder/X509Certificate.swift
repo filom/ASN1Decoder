@@ -303,6 +303,10 @@ public class X509Certificate: CustomStringConvertible {
            return X509ExtAuthorityKeyIdentifier(asn1Object:(extensionObject(oid: "2.5.29.35")?.block)!)
        }
     
+    public var subjectKeyIdentifier:Data? {
+        return extensionObject(oid: "2.5.29.14")?.block.sub?.last?.sub?.first?.rawValue ?? nil
+    }
+    
     public var crlDistributionPoints: [X509ExtCrlDistributionPoint] {
          var result: [X509ExtCrlDistributionPoint] = []
         
