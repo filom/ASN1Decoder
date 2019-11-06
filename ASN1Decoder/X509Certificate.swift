@@ -299,6 +299,10 @@ public class X509Certificate: CustomStringConvertible {
         return X509ExtBasicContraints(asn1Object:(extensionObject(oid: "2.5.29.19")?.block)!)
     }
     
+    public var authorityKeyIdentifier:X509ExtAuthorityKeyIdentifier {
+           return X509ExtAuthorityKeyIdentifier(asn1Object:(extensionObject(oid: "2.5.29.35")?.block)!)
+       }
+    
     public var crlDistributionPoints: [X509ExtCrlDistributionPoint] {
          var result: [X509ExtCrlDistributionPoint] = []
         
@@ -515,3 +519,25 @@ public class X509ExtBasicContraints {
 }
 
 
+public class X509ExtAuthorityKeyIdentifier{
+    
+    var identifier:Data?
+    var issuer:ASN1GeneralNames?
+    var serialNumber:String?
+    
+    init(asn1Object: ASN1Object) {
+        
+        
+        guard asn1Object.subCount() > 1 else {
+            return
+        }
+        
+        self.identifier = (asn1Object.sub?[1].sub?.first?.sub?.first?.value as! Data)
+        
+        guard (asn1Object.sub?[1].sub?.first?.subCount())! > 1 else {
+            return
+        }
+        self.issuer = ASN1GeneralNames(asn1Object: (asn1Object.sub?[1].sub?.first?.sub?[1])!)
+        
+    }
+}
