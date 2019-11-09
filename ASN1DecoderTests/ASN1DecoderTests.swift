@@ -151,8 +151,6 @@ class ASN1DecoderTests: XCTestCase {
         XCTAssertEqual(x509.extendedKeyUsage,["1.3.6.1.5.5.7.3.1", "1.3.6.1.5.5.7.3.2"])  // (2.5.29.37)
         
         
-       
-        XCTAssertEqual((x509.extensionObject(oid: "2.5.29.14")?.value as? Data)?.hexEncodedString(), nil)  // SubjectKeyIdentifier    (2.5.29.14)                   // FIXME should be 6CB04356FE3DE812ECD912F563D5C4CA07AFB076
         XCTAssertEqual(x509.extensionObject(oid: "1.3.6.1.5.5.7.1.1")?.valueAsStrings,[])  // AuthorityInfoAccess    (1.3.6.1.5.5.7.1.1)                            // FIXME
         XCTAssertEqual(x509.extensionObject(oid: "1.3.6.1.4.1.11129.2.4.2")?.valueAsStrings,[])  // Extended validation certificates    (1.3.6.1.4.1.11129.2.4.2)   // FIXME
         
