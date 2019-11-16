@@ -140,18 +140,13 @@ public class ASN1DERDecoder {
                     
                         
                     case .octetString:
-                        do {
-                            var subIterator = contentData.makeIterator()
-                            asn1obj.sub = try parse(iterator: &subIterator)
-                        } catch {
                             if let str = String(data: contentData, encoding: .utf8) {
                                 asn1obj.value = str
                             }
                             else {
                                 asn1obj.value = contentData
                             }
-                        }
-                        
+    
                         
                     default:
                         print("unsupported tag: \(asn1obj.identifier!.tagNumber())")

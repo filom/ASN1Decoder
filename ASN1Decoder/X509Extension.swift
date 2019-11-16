@@ -27,7 +27,17 @@ public class X509Extension {
     
     let block: ASN1Object
 
-    init(block: ASN1Object) {
+    init(block: ASN1Object)  {
+       
+        do {
+            let extBlock = try ASN1DERDecoder.decode(data: block.sub?.last?.rawValue ?? Data())
+            extBlock[0].parent = block.sub?.last
+            block.sub?.last?.sub = extBlock
+        }
+        catch  {
+            
+        }
+        
         self.block = block
     }
 

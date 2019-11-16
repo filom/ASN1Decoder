@@ -296,7 +296,7 @@ public class X509Certificate: CustomStringConvertible {
 
     
     public var basicConstraints:X509ExtBasicContraints {
-        return X509ExtBasicContraints(asn1Object:(extensionObject(oid: "2.5.29.19")?.block)!)
+        return X509ExtBasicContraints(extObject:extensionObject(oid: "2.5.29.19"))
     }
     
     public var authorityKeyIdentifier:X509ExtAuthorityKeyIdentifier {
@@ -506,20 +506,16 @@ public class X509ExtBasicContraints {
    
 
     
-    init(asn1Object: ASN1Object) {
+    init(extObject: X509Extension?) {
         
-        
-        if let cAValue = asn1Object.sub?.last?.sub?.first?.value {
+        if let cAValue = extObject?.valueAsBlock?.sub?.first?.sub?.first?.value {
             self.isCA = (cAValue as! Bool)
         }
-        
-        
-        if let pathValue = asn1Object.sub?[2].value {
+                
+        if let pathValue = extObject?.valueAsBlock?.sub?.first?.sub?.last?.value {
             self.pathLengthConstraint = (pathValue as! Int)
         }
     }
-    
- 
 }
 
 
