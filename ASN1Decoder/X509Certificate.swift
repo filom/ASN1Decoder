@@ -83,6 +83,17 @@ public class X509Certificate: CustomStringConvertible {
         return asn1.reduce("") { $0 + "\($1.description)\n" }
     }
 
+    public var encodedTBSCertificate:Data? {
+        var length = UInt16(self.block1.rawValue!.count).bigEndian
+        return Data([UInt8(0x30),UInt8(0x82)]) + Data(bytes: &length, count: 2) + (self.block1.rawValue ?? Data())
+    }
+    
+    public var encodedCertificate:Data? {
+        var length = UInt16(self.asn1[0].rawValue!.count).bigEndian
+        return Data([UInt8(0x30),UInt8(0x82)]) + Data(bytes: &length, count: 2) + (self.asn1[0].rawValue ?? Data())
+    }
+    
+    
     /// Checks that the given date is within the certificate's validity period.
     public func checkValidity(_ date: Date = Date()) -> Bool {
         if let notBefore = notBefore, let notAfter = notAfter {
@@ -201,6 +212,9 @@ public class X509Certificate: CustomStringConvertible {
         return nil
     }
 
+    
+    
+    
     /**
      Gets a boolean array representing bits of the KeyUsage extension, (OID = 2.5.29.15).
      ```
@@ -280,6 +294,64 @@ public class X509Certificate: CustomStringConvertible {
             .map(X509Extension.init)
     }
 
+    
+    public var basicConstraints:X509ExtBasicContraints {
+        return X509ExtBasicContraints(extObject:extensionObject(oid: "2.5.29.19"))
+    }
+    
+    public var authorityKeyIdentifier:X509ExtAuthorityKeyIdentifier {
+           return X509ExtAuthorityKeyIdentifier(asn1Object:(extensionObject(oid: "2.5.29.35")?.block)!)
+       }
+    
+    public var subjectKeyIdentifier:Data? {
+        return extensionObject(oid: "2.5.29.14")?.block.sub?.last?.sub?.first?.rawValue ?? nil
+    }
+    
+    public var crlDistributionPoints: [X509ExtCrlDistributionPoint] {
+         var result: [X509ExtCrlDistributionPoint] = []
+        
+        guard let crlDistPointsObject = extensionObject(oid: "2.5.29.31") else {
+            return result
+        }
+        
+        
+        // instance of class
+        guard ((crlDistPointsObject.block.sub?.last?.sub?.last?.sub?.last)?.subCount())! > 0 else {
+            return result
+        }
+        
+        for crlDistPointObject in ((crlDistPointsObject.block.sub?.last?.sub?.last?.sub!)!) {
+            
+            result.append(X509ExtCrlDistributionPoint(asn1Object: crlDistPointObject))
+        }
+        
+         return result
+     }
+     
+    
+    
+    public var certificatePolicies: [X509ExtCertficatePolicy] {
+        var result: [X509ExtCertficatePolicy] = []
+       
+       guard let certficatePoliciesObject = extensionObject(oid: "2.5.29.32") else {
+           return result
+       }
+       
+       
+       // instance of class
+       guard ((certficatePoliciesObject.block.sub?.last?.sub?.last)?.subCount())! > 0 else {
+           return result
+       }
+       
+       for certficatePolicyObject in ((certficatePoliciesObject.block.sub?.last?.sub?.last?.sub!)!) {
+           
+           result.append(X509ExtCertficatePolicy(asn1Object: certficatePolicyObject))
+       }
+       
+        return result
+    }
+    
+    
     // Format subject/issuer information in RFC1779
     private func blockDistinguishedName(block: ASN1Object) -> String {
         var result = ""
@@ -357,5 +429,115 @@ extension ASN1Object {
         guard let sub = sub,
             sub.indices.contains(index.rawValue) else { return nil }
         return sub[index.rawValue]
+    }
+}
+
+
+
+ 
+
+public class X509ExtCrlDistributionPoint {
+    
+    var fullName:ASN1GeneralNames?
+    var nameRelativeToCRLIssuer:String?
+    var reasons:[Bool]?
+    var crlIssuer:ASN1GeneralNames?
+    
+    init(asn1Object: ASN1Object) {
+        
+        self.fullName = ASN1GeneralNames(asn1Object: (asn1Object.sub?.last?.sub?.last?.sub?.last)!)
+        
+    }
+    
+            
+            
+    //        if let oidBlock = block1.findOid(OID_KeyUsage) {
+    //             let data = oidBlock.parent?.sub?.last?.sub(0)?.value as? Data
+    //             let bits: UInt8 = data?.first ?? 0
+    //             for i in 0...7 {
+    //                 let value = bits & UInt8(1 << i) != 0
+    //                 result.insert(value, at: 0)
+    //             }
+    //         }
+
+}
+
+
+public class X509ExtCertficatePolicy{
+    
+    var identifier:String?
+    var qualifierInfo:X509ExtCertficatePolicyQualifierInfo?
+    
+    init(asn1Object: ASN1Object) {
+        
+        self.identifier = (asn1Object.sub?[0].value as! String)
+        
+        guard asn1Object.subCount() > 1 else {
+            return
+        }
+            
+        self.qualifierInfo = X509ExtCertficatePolicyQualifierInfo(asn1Object: (asn1Object.sub?[1])!)
+        
+    }
+}
+
+
+public class X509ExtCertficatePolicyQualifierInfo {
+    
+    var identifier:String?
+    var qualifier:String?
+    
+    init(asn1Object: ASN1Object) {
+        
+        self.identifier = (asn1Object.sub?.first?.sub?.first?.value as! String)
+        self.qualifier = (asn1Object.sub?.first?.sub?.last?.value as! String)
+        
+    }
+}
+
+
+
+
+
+public class X509ExtBasicContraints {
+    
+    var isCA:Bool? = false
+    var pathLengthConstraint:Int? = nil
+   
+
+    
+    init(extObject: X509Extension?) {
+        
+        if let cAValue = extObject?.valueAsBlock?.sub?.first?.sub?.first?.value {
+            self.isCA = (cAValue as! Bool)
+        }
+                
+        if let pathValue = extObject?.valueAsBlock?.sub?.first?.sub?.last?.value {
+            self.pathLengthConstraint = (pathValue as! Int)
+        }
+    }
+}
+
+
+public class X509ExtAuthorityKeyIdentifier{
+    
+    var identifier:Data?
+    var issuer:ASN1GeneralNames?
+    var serialNumber:String?
+    
+    init(asn1Object: ASN1Object) {
+        
+        
+        guard asn1Object.subCount() > 1 else {
+            return
+        }
+        
+        self.identifier = (asn1Object.sub?[1].sub?.first?.sub?.first?.value as! Data)
+        
+        guard (asn1Object.sub?[1].sub?.first?.subCount())! > 1 else {
+            return
+        }
+        self.issuer = ASN1GeneralNames(asn1Object: (asn1Object.sub?[1].sub?.first?.sub?[1])!)
+        
     }
 }

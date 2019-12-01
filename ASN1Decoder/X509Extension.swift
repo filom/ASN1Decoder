@@ -27,7 +27,17 @@ public class X509Extension {
     
     let block: ASN1Object
 
-    init(block: ASN1Object) {
+    init(block: ASN1Object)  {
+       
+        do {
+            let extBlock = try ASN1DERDecoder.decode(data: block.sub?.last?.rawValue ?? Data())
+            extBlock[0].parent = block.sub?.last
+            block.sub?.last?.sub = extBlock
+        }
+        catch  {
+            
+        }
+        
         self.block = block
     }
 
@@ -56,14 +66,37 @@ public class X509Extension {
     var valueAsBlock: ASN1Object? {
         return block.sub?.last
     }
-
+    
     var valueAsStrings: [String] {
-        var result: [String] = []
-        for item in block.sub?.last?.sub?.last?.sub ?? [] {
-            if let name = item.value as? String {
-                result.append(name)
+           var result: [String] = []
+           for item in block.sub?.last?.sub?.last?.sub ?? [] {
+               if let name = item.value as? String {
+                   result.append(name)
+               }
+           }
+           return result
+       }
+
+    var values: [Any] {
+        return self.findLeafs(asn1object: self.valueAsBlock)
+    }
+    
+    public func findLeafs(asn1object:ASN1Object?) -> [Any] {
+        
+        var result:[Any] = []
+        for child in asn1object?.sub ?? [] {
+            if let value = child.value {
+                result.append(value)
+            }
+            else {
+                result = result+(findLeafs(asn1object: child))
             }
         }
         return result
     }
+
 }
+
+
+
+
