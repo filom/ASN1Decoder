@@ -25,7 +25,7 @@ import Foundation
 
 public class ASN1Identifier: CustomStringConvertible {
 
-    public enum Class : UInt8 {
+    public enum Class: UInt8 {
         case universal = 0x00
         case application = 0x40
         case contextSpecific = 0x80
@@ -71,10 +71,8 @@ public class ASN1Identifier: CustomStringConvertible {
     }
 
     public func typeClass() -> Class {
-        for tc in [Class.application, Class.contextSpecific, Class.private] {
-            if (rawValue & tc.rawValue) == tc.rawValue {
-                return tc
-            }
+        for tc in [Class.application, Class.contextSpecific, Class.private] where (rawValue & tc.rawValue) == tc.rawValue {
+            return tc
         }
         return .universal
     }
@@ -93,8 +91,7 @@ public class ASN1Identifier: CustomStringConvertible {
     public var description: String {
         if typeClass() == .universal {
             return String(describing: tagNumber())
-        }
-        else {
+        } else {
             return "\(typeClass())(\(tagNumber().rawValue))"
         }
     }

@@ -9,7 +9,7 @@ let package = Package(
         // Products define the executables and libraries produced by a package, and make them visible to other packages.
         .library(
             name: "ASN1Decoder",
-            targets: ["ASN1Decoder"]),
+            targets: ["ASN1Decoder"])
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
@@ -25,6 +25,6 @@ let package = Package(
         .testTarget(
             name: "ASN1DecoderTests",
             dependencies: ["ASN1Decoder"],
-            path: "ASN1DecoderTests"),
+            path: "ASN1DecoderTests")
     ]
 )

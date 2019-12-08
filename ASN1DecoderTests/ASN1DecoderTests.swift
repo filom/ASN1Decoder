@@ -22,7 +22,6 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //  SOFTWARE.
 
-
 import XCTest
 @testable import ASN1Decoder
 
@@ -131,7 +130,6 @@ j1I7q0bAhL1eUuXE8FSm6M8ZogW/ZYkOHE2u
 """
     var certPEMData: Data { return certPEM.data(using: .utf8)! }
 }
-
 
 extension Data {
     func hexEncodedString(separation: String = "") -> String {

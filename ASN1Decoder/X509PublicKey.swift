@@ -24,9 +24,6 @@
 import Foundation
 
 public class X509PublicKey {
-    
-    private let OID_ECPublicKey = "1.2.840.10045.2.1"
-    private let OID_RSAEncryption = "1.2.840.113549.1.1.1"
 
     var pkBlock: ASN1Object!
 
@@ -49,15 +46,16 @@ public class X509PublicKey {
     public var key: Data? {
         guard
             let algOid = algOid,
+            let oid = OID(rawValue: algOid),
             let keyData = pkBlock.sub(1)?.value as? Data else {
                 return nil
         }
 
-        switch algOid {
-        case OID_ECPublicKey:
+        switch oid {
+        case .ecPublicKey:
             return keyData
 
-        case OID_RSAEncryption:
+        case .rsaEncryption:
             guard let publicKeyAsn1Objects = (try? ASN1DERDecoder.decode(data: keyData)) else {
                 return nil
             }

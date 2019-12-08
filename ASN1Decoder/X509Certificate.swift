@@ -30,12 +30,7 @@ public class X509Certificate: CustomStringConvertible {
     private static let beginPemBlock = "-----BEGIN CERTIFICATE-----"
     private static let endPemBlock   = "-----END CERTIFICATE-----"
 
-    private let OID_KeyUsage = "2.5.29.15"
-    private let OID_ExtendedKeyUsage = "2.5.29.37"
-    private let OID_SubjectAltName = "2.5.29.17"
-    private let OID_IssuerAltName = "2.5.29.18"
-
-    enum X509BlockPosition : Int {
+    enum X509BlockPosition: Int {
         case version = 0
         case serialNumber = 1
         case signatureAlg = 2
@@ -93,8 +88,8 @@ public class X509Certificate: CustomStringConvertible {
 
     /// Gets the version (version number) value from the certificate.
     public var version: Int? {
-        if let v = firstLeafValue(block: block1) as? Data, let i = v.toIntValue() {
-            return Int(i) + 1
+        if let v = firstLeafValue(block: block1) as? Data, let index = v.toIntValue() {
+            return Int(index) + 1
         }
         return nil
     }
@@ -103,7 +98,6 @@ public class X509Certificate: CustomStringConvertible {
     public var serialNumber: Data? {
         return block1[X509BlockPosition.serialNumber]?.value as? Data
     }
-
 
     /// Returns the issuer (issuer distinguished name) value from the certificate as a String.
     public var issuerDistinguishedName: String? {
@@ -133,7 +127,7 @@ public class X509Certificate: CustomStringConvertible {
         }
         return nil
     }
-    
+
     public func issuer(dn: ASN1DistinguishedNames) -> String? {
         return issuer(oid: dn.oid)
     }
@@ -166,7 +160,7 @@ public class X509Certificate: CustomStringConvertible {
         }
         return nil
     }
-    
+
     public func subject(dn: ASN1DistinguishedNames) -> String? {
         return subject(oid: dn.oid)
     }
@@ -219,30 +213,31 @@ public class X509Certificate: CustomStringConvertible {
      */
     public var keyUsage: [Bool] {
         var result: [Bool] = []
-        if let oidBlock = block1.findOid(OID_KeyUsage) {
+        if let oidBlock = block1.findOid(OID.keyUsage) {
             let data = oidBlock.parent?.sub?.last?.sub(0)?.value as? Data
             let bits: UInt8 = data?.first ?? 0
-            for i in 0...7 {
-                let value = bits & UInt8(1 << i) != 0
+            for index in 0...7 {
+                let value = bits & UInt8(1 << index) != 0
                 result.insert(value, at: 0)
             }
         }
         return result
     }
 
-    /// Gets a list of Strings representing the OBJECT IDENTIFIERs of the ExtKeyUsageSyntax field of the extended key usage extension, (OID = 2.5.29.37).
+    /// Gets a list of Strings representing the OBJECT IDENTIFIERs of the ExtKeyUsageSyntax field of
+    /// the extended key usage extension, (OID = 2.5.29.37).
     public var extendedKeyUsage: [String] {
-        return extensionObject(oid: OID_ExtendedKeyUsage)?.valueAsStrings ?? []
+        return extensionObject(oid: OID.extKeyUsage)?.valueAsStrings ?? []
     }
 
     /// Gets a collection of subject alternative names from the SubjectAltName extension, (OID = 2.5.29.17).
     public var subjectAlternativeNames: [String] {
-        return extensionObject(oid: OID_SubjectAltName)?.valueAsStrings ?? []
+        return extensionObject(oid: OID.subjectAltName)?.valueAsStrings ?? []
     }
 
     /// Gets a collection of issuer alternative names from the IssuerAltName extension, (OID = 2.5.29.18).
     public var issuerAlternativeNames: [String] {
-        return extensionObject(oid: OID_IssuerAltName)?.valueAsStrings ?? []
+        return extensionObject(oid: OID.issuerAltName)?.valueAsStrings ?? []
     }
 
     /// Gets the informations of the public key from this certificate.
@@ -272,6 +267,11 @@ public class X509Certificate: CustomStringConvertible {
         return block1[X509BlockPosition.extensions]?.sub(0)?.sub
     }
 
+    /// Gets the extension information of the given OID enum.
+    public func extensionObject(oid: OID) -> X509Extension? {
+        return extensionObject(oid: oid.rawValue)
+    }
+    
     /// Gets the extension information of the given OID code.
     public func extensionObject(oid: String) -> X509Extension? {
         return block1[X509BlockPosition.extensions]?

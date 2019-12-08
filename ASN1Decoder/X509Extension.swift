@@ -24,7 +24,7 @@
 import Foundation
 
 public class X509Extension {
-    
+
     let block: ASN1Object
 
     init(block: ASN1Object) {

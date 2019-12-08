@@ -1,0 +1,23 @@
+disabled_rules:
+  - identifier_name
+  - redundant_string_enum_value
+  - trailing_whitespace
+  - line_length
+  - multiple_closures_with_trailing_closure
+  - function_parameter_count
+analyzer_rules: # Rules run by `swiftlint analyze` (experimental)
+  - explicit_self
+cyclomatic_complexity:
+  ignores_case_statements: true
+type_body_length:
+  warning: 500
+  error: 600
+file_length:
+  warning: 700
+  error: 1200
+type_name:
+  min_length: 1
+  max_length: 50
+identifier_name:
+  min_length: 1
+  max_length: 50

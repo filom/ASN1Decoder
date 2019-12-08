@@ -33,17 +33,17 @@ public class ASN1DistinguishedNames {
         self.representation = representation
     }
    
-    public static let commonName             = ASN1DistinguishedNames(oid: "2.5.4.3",  representation: "CN")
+    public static let commonName             = ASN1DistinguishedNames(oid: "2.5.4.3", representation: "CN")
     public static let dnQualifier            = ASN1DistinguishedNames(oid: "2.5.4.46", representation: "DNQ")
-    public static let serialNumber           = ASN1DistinguishedNames(oid: "2.5.4.5",  representation: "SERIALNUMBER")
+    public static let serialNumber           = ASN1DistinguishedNames(oid: "2.5.4.5", representation: "SERIALNUMBER")
     public static let givenName              = ASN1DistinguishedNames(oid: "2.5.4.42", representation: "GIVENNAME")
-    public static let surname                = ASN1DistinguishedNames(oid: "2.5.4.4",  representation: "SURNAME")
+    public static let surname                = ASN1DistinguishedNames(oid: "2.5.4.4", representation: "SURNAME")
     public static let organizationalUnitName = ASN1DistinguishedNames(oid: "2.5.4.11", representation: "OU")
     public static let organizationName       = ASN1DistinguishedNames(oid: "2.5.4.10", representation: "O")
-    public static let streetAddress          = ASN1DistinguishedNames(oid: "2.5.4.9",  representation: "STREET")
-    public static let localityName           = ASN1DistinguishedNames(oid: "2.5.4.7",  representation: "L")
-    public static let stateOrProvinceName    = ASN1DistinguishedNames(oid: "2.5.4.8",  representation: "ST")
-    public static let countryName            = ASN1DistinguishedNames(oid: "2.5.4.6",  representation: "C")
+    public static let streetAddress          = ASN1DistinguishedNames(oid: "2.5.4.9", representation: "STREET")
+    public static let localityName           = ASN1DistinguishedNames(oid: "2.5.4.7", representation: "L")
+    public static let stateOrProvinceName    = ASN1DistinguishedNames(oid: "2.5.4.8", representation: "ST")
+    public static let countryName            = ASN1DistinguishedNames(oid: "2.5.4.6", representation: "C")
     public static let email                  = ASN1DistinguishedNames(oid: "1.2.840.113549.1.9.1", representation: "E")
     
 }
