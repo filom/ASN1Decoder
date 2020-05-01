@@ -11,7 +11,5 @@ Pod::Spec.new do |s|
   s.source        = { :git => "https://github.com/filom/ASN1Decoder.git", :tag => s.version }
   s.source_files  = "ASN1Decoder/*.swift"
   s.frameworks    = "Foundation"
-  s.pod_target_xcconfig =  {
-        'SWIFT_VERSION' => '5.0',
-  }
+  s.swift_version = '5.0'
 end
