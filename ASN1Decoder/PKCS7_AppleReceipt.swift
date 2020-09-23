@@ -36,6 +36,9 @@ extension PKCS7 {
         /// CFBundleIdentifier in Info.plist
         public fileprivate(set) var bundleIdentifier: String?
 
+        /// CFBundleIdentifier in Info.plist as bytes, used, with other data, to compute the SHA-1 hash during validation.
+        public fileprivate(set) var bundleIdentifierData: Data?
+
         /// CFBundleVersion (in iOS) or CFBundleShortVersionString (in macOS) in Info.plist
         public fileprivate(set) var bundleVersion: String?
 
@@ -87,6 +90,7 @@ extension PKCS7 {
             switch fieldType {
             case 2:
                 receiptInfo.bundleIdentifier = fieldValueString
+                receiptInfo.bundleIdentifierData = item.sub(2)?.rawValue
 
             case 3:
                 receiptInfo.bundleVersion = fieldValueString
