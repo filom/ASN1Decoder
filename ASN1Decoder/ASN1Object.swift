@@ -89,6 +89,7 @@ public class ASN1Object: CustomStringConvertible {
         return output
     }
 
+    // FIXME: This is quite similar to the enum mapping in OID.swift. Can we unify this?
     static let oidDecodeMap: [String: String] = [
         "0.4.0.1862.1.1": "etsiQcsCompliance",
         "0.4.0.1862.1.3": "etsiQcsRetentionPeriod",
@@ -99,6 +100,7 @@ public class ASN1Object: CustomStringConvertible {
         "1.2.840.10045.4.3.2": "ecdsaWithSHA256",
         "1.2.840.10045.4.3.4": "ecdsaWithSHA512",
         "1.2.840.113549.1.1.1": "rsaEncryption",
+        "1.3.14.3.2.26": "sha1",
         "1.2.840.113549.1.1.4": "md5WithRSAEncryption",
         "1.2.840.113549.1.1.5": "sha1WithRSAEncryption",
         "1.2.840.113549.1.1.11": "sha256WithRSAEncryption",
