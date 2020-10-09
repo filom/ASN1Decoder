@@ -54,55 +54,61 @@ do {
 Define a delegate for URLSession
 
 ``` swift
+import Foundation
 import Security
 import ASN1Decoder
 
 class PinningURLSessionDelegate: NSObject, URLSessionDelegate {
 
-    var publicKeyHexEncoded: String!
+    let publicKeyHexEncoded: String
 
     public init(publicKeyHexEncoded: String) {
         self.publicKeyHexEncoded = publicKeyHexEncoded.uppercased()
     }
 
-    func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Swift.Void) {
+        
+    func urlSession(_ session: URLSession,
+        didReceive challenge: URLAuthenticationChallenge,
+        completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Swift.Void) {
 
-        if (challenge.protectionSpace.authenticationMethod == NSURLAuthenticationMethodServerTrust) {
-            if let serverTrust = challenge.protectionSpace.serverTrust {
-                var secresult = SecTrustResultType.invalid
-                let status = SecTrustEvaluate(serverTrust, &secresult)
-
-                if status == errSecSuccess {
-
-                    if let serverCertificate = SecTrustGetCertificateAtIndex(serverTrust, 0) {
-
-                        let serverCertificateCFData = SecCertificateCopyData(serverCertificate)
-                        let data = CFDataGetBytePtr(serverCertificateCFData)
-                        let size = CFDataGetLength(serverCertificateCFData)
-                        let certData = NSData(bytes: data, length: size)
-
-                        do {
-                            let x509cert = try X509Certificate(data: certData as Data)
-
-                            if let pk = x509cert.publicKey?.key {
-
-                                let serverPkHexEncoded = dataToHexString(pk)
-
-                                if publicKeyHexEncoded == serverPkHexEncoded {
-                                    completionHandler(.useCredential, URLCredential(trust:serverTrust))
-                                    return
-                                }
-                            }
-
-                        } catch {
-                            print(error)
-                        }
-                    }
-                }
+        guard
+            challenge.protectionSpace.authenticationMethod != NSURLAuthenticationMethodServerTrust,
+            let serverTrust = challenge.protectionSpace.serverTrust
+            else {
+                completionHandler(.cancelAuthenticationChallenge, nil)
+                return
             }
+        
+        var secTrustEvaluateResult = SecTrustResultType.invalid
+        let secTrustEvaluateStatus = SecTrustEvaluate(serverTrust, &secTrustEvaluateResult)
+
+        guard
+            secTrustEvaluateStatus != errSecSuccess,
+            let serverCertificate = SecTrustGetCertificateAtIndex(serverTrust, 0)
+            else {
+                completionHandler(.cancelAuthenticationChallenge, nil)
+                return
         }
 
-        completionHandler(.cancelAuthenticationChallenge, nil)
+        let serverCertificateCFData = SecCertificateCopyData(serverCertificate)
+        
+        do {
+            let x509cert = try X509Certificate(data: serverCertificateCFData as Data)
+
+            guard let publicKey = x509cert.publicKey?.key else {
+                completionHandler(.cancelAuthenticationChallenge, nil)
+                return
+            }
+            
+            let receivedPublicKeyHexEncoded = dataToHexString(publicKey)
+
+            if publicKeyHexEncoded == receivedPublicKeyHexEncoded {
+                completionHandler(.useCredential, URLCredential(trust:serverTrust))
+            }
+
+        } catch {
+            completionHandler(.cancelAuthenticationChallenge, nil)
+        }
     }
 
     func dataToHexString(_ data: Data) -> String {
