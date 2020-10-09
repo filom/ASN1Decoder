@@ -93,8 +93,17 @@ public class SignatureInfo {
         version = asn1.sub(0)
         signerIdentifier = asn1.sub(1)
         digestAlgorithmIdentifier = asn1.sub(2)
-        signedAttributes = asn1.sub(3)
-        signatureAlgorithm = asn1.sub(4)
-        signature = asn1.sub(5)
+        let sub3 = asn1.sub(3)
+        // Signed attributes is optional according to https://tools.ietf.org/html/rfc5652#section-5.3
+        // value is not present e.g. in AppStore receipts
+        if sub3?.identifier?.typeClass() == ASN1Identifier.Class.contextSpecific {
+            signedAttributes = sub3
+            signatureAlgorithm = asn1.sub(4)
+            signature = asn1.sub(5)
+        } else {
+            signedAttributes = nil
+            signatureAlgorithm = sub3
+            signature = asn1.sub(4)
+        }
     }
 }
