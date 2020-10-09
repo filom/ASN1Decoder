@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "ASN1Decoder"
-  s.version      = "1.3.3"
+  s.version      = "1.4"
   s.summary      = "ASN1 DER Decoder for X.509 certificate"
   s.description  = "ASN1 DER Decoder to parse X.509 certificate"
   s.homepage     = "https://github.com/filom/ASN1Decoder"
@@ -10,8 +10,6 @@ Pod::Spec.new do |s|
   s.osx.deployment_target = "10.10"
   s.source        = { :git => "https://github.com/filom/ASN1Decoder.git", :tag => s.version }
   s.source_files  = "ASN1Decoder/*.swift"
+  s.swift_version = '5.0'
   s.frameworks    = "Foundation"
-  s.pod_target_xcconfig =  {
-        'SWIFT_VERSION' => '5.0',
-  }
 end
