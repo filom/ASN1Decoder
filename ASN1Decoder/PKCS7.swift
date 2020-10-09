@@ -52,7 +52,7 @@ public class PKCS7 {
     }
 
     public var digestAlgorithmName: String? {
-        return ASN1Object.oidDecodeMap[digestAlgorithm ?? ""] ?? digestAlgorithm
+        return OID.description(of: digestAlgorithm ?? "") ?? digestAlgorithm
     }
 
     public var certificate: X509Certificate? {

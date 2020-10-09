@@ -182,7 +182,7 @@ public class X509Certificate: CustomStringConvertible {
 
     /// Gets the signature algorithm name for the certificate signature algorithm.
     public var sigAlgName: String? {
-        return ASN1Object.oidDecodeMap[sigAlgOID ?? ""]
+        return OID.description(of: sigAlgOID ?? "")
     }
 
     /// Gets the signature algorithm OID string from the certificate.

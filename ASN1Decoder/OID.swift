@@ -78,4 +78,11 @@ public enum OID: String {
     case localityName = "2.5.4.7"
     case stateOrProvinceName = "2.5.4.8"
     case streetAddress = "2.5.4.9"
+    
+    static func description(of value: String) -> String? {
+        guard let oid = OID(rawValue: value) else {
+            return nil
+        }
+        return "\(oid)"
+    }
 }

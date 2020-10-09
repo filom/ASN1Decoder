@@ -36,7 +36,7 @@ public class X509PublicKey {
     }
 
     public var algName: String? {
-        return ASN1Object.oidDecodeMap[algOid ?? ""]
+        return OID.description(of: algOid ?? "")
     }
 
     public var algParams: String? {

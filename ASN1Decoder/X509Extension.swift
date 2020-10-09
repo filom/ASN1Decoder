@@ -36,7 +36,7 @@ public class X509Extension {
     }
 
     public var name: String? {
-        return ASN1Object.oidDecodeMap[oid ?? ""]
+        return OID.description(of: oid ?? "")
     }
 
     public var isCritical: Bool {

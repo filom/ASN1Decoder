@@ -38,11 +38,8 @@ extension PKCS7 {
             let sigInfo = SignatureInfo(asn1: signatureInfoasn1)
             signatures.append(sigInfo)
         }
-        
-        
-        
+
         return signatures
-        
     }
 }
 
