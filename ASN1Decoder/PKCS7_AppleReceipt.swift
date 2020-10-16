@@ -72,11 +72,7 @@ extension PKCS7 {
     }
     
     func parseDate(_ dateString: String) -> Date? {
-        let rfc3339DateFormatter = DateFormatter()
-        rfc3339DateFormatter.locale = Locale(identifier: "en_US_POSIX")
-        rfc3339DateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZZZZZ"
-        rfc3339DateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
-        return rfc3339DateFormatter.date(from: dateString)
+        return ReceiptDateFormatter.date(from: dateString)        
     }
 
     public func receipt() -> ReceiptInfo? {
@@ -169,4 +165,24 @@ extension PKCS7 {
         return inAppPurchaseInfo
     }
 
+}
+
+// MARK: ReceiptDateFormatter
+
+/// Static formatting methods to use for string encoded date values in receipts
+private enum ReceiptDateFormatter {
+
+    /// Uses receipt-conform representation of dates like "2017-01-01T12:00:00Z",
+    static func date(from string: String) -> Date? {
+        return self.defaultDateFormatter.date(from: string) // expected
+    }
+
+    /// Uses receipt-conform representation of dates like "2017-01-01T12:00:00Z" (rfc3339 without millis)
+    private static let defaultDateFormatter: DateFormatter = {
+        let dateDateFormatter = DateFormatter()
+        dateDateFormatter.locale = Locale(identifier: "en_US_POSIX")
+        dateDateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZZZZZ"
+        dateDateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
+        return dateDateFormatter
+    }()
 }
