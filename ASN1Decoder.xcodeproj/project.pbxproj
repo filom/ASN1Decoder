@@ -24,6 +24,9 @@
 		41A2003A23661DAB005EC955 /* ASN1DistinguishedNames.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41A2003823661DA8005EC955 /* ASN1DistinguishedNames.swift */; };
 		41B11CD1202E16060009670B /* PKCS7_AppleReceipt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41B11CD0202E16060009670B /* PKCS7_AppleReceipt.swift */; };
 		41B703C4239D2EC600904B6B /* ASN1AppleReceiptTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41B703C3239D2EC600904B6B /* ASN1AppleReceiptTest.swift */; };
+		41D14F732538608E00B92428 /* ASN1DecoderAlternativeNames.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41D14F722538608E00B92428 /* ASN1DecoderAlternativeNames.swift */; };
+		41D14F7B2538638F00B92428 /* X509ExtensionAltName.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41D14F7A2538634900B92428 /* X509ExtensionAltName.swift */; };
+		41D14F7F2538639000B92428 /* X509ExtensionAltName.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41D14F7A2538634900B92428 /* X509ExtensionAltName.swift */; };
 		41D14FE31F58C15A0058DE7A /* PKCS7.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41D14FE21F58C1590058DE7A /* PKCS7.swift */; };
 		41ECF197230985DC00588953 /* ASN1Decoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 41ECF195230985DC00588953 /* ASN1Decoder.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		41ECF1DE23099DD900588953 /* ASN1Decoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 412A9E521F55C6830099110C /* ASN1Decoder.swift */; };
@@ -65,6 +68,8 @@
 		41A2003823661DA8005EC955 /* ASN1DistinguishedNames.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASN1DistinguishedNames.swift; sourceTree = "<group>"; };
 		41B11CD0202E16060009670B /* PKCS7_AppleReceipt.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PKCS7_AppleReceipt.swift; sourceTree = "<group>"; };
 		41B703C3239D2EC600904B6B /* ASN1AppleReceiptTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASN1AppleReceiptTest.swift; sourceTree = "<group>"; };
+		41D14F722538608E00B92428 /* ASN1DecoderAlternativeNames.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASN1DecoderAlternativeNames.swift; sourceTree = "<group>"; };
+		41D14F7A2538634900B92428 /* X509ExtensionAltName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = X509ExtensionAltName.swift; sourceTree = "<group>"; };
 		41D14FE21F58C1590058DE7A /* PKCS7.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PKCS7.swift; sourceTree = "<group>"; };
 		41ECF193230985DC00588953 /* ASN1Decoder.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ASN1Decoder.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		41ECF195230985DC00588953 /* ASN1Decoder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ASN1Decoder.h; sourceTree = "<group>"; };
@@ -132,6 +137,7 @@
 				412A9E551F55C6830099110C /* X509Certificate.swift */,
 				41A2003223661989005EC955 /* X509PublicKey.swift */,
 				41A2003423661A0D005EC955 /* X509Extension.swift */,
+				41D14F7A2538634900B92428 /* X509ExtensionAltName.swift */,
 				41D14FE21F58C1590058DE7A /* PKCS7.swift */,
 				41B11CD0202E16060009670B /* PKCS7_AppleReceipt.swift */,
 				78312B2324C8C8DB008EB688 /* PKCS7_Signature.swift */,
@@ -145,6 +151,7 @@
 			children = (
 				78312B2624C8C8ED008EB688 /* ASN1DecoderSignatureTests.swift */,
 				412A9E461F55C6500099110C /* ASN1DecoderTests.swift */,
+				41D14F722538608E00B92428 /* ASN1DecoderAlternativeNames.swift */,
 				41B703C3239D2EC600904B6B /* ASN1AppleReceiptTest.swift */,
 				412A9E481F55C6500099110C /* Info.plist */,
 			);
@@ -337,6 +344,7 @@
 			files = (
 				41D14FE31F58C15A0058DE7A /* PKCS7.swift in Sources */,
 				78312B2424C8C8DB008EB688 /* PKCS7_Signature.swift in Sources */,
+				41D14F7B2538638F00B92428 /* X509ExtensionAltName.swift in Sources */,
 				41A2003523661A0D005EC955 /* X509Extension.swift in Sources */,
 				412A9E581F55C6830099110C /* ASN1Object.swift in Sources */,
 				41B11CD1202E16060009670B /* PKCS7_AppleReceipt.swift in Sources */,
@@ -354,6 +362,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				41B703C4239D2EC600904B6B /* ASN1AppleReceiptTest.swift in Sources */,
+				41D14F732538608E00B92428 /* ASN1DecoderAlternativeNames.swift in Sources */,
 				78312B2724C8C8ED008EB688 /* ASN1DecoderSignatureTests.swift in Sources */,
 				412A9E471F55C6500099110C /* ASN1DecoderTests.swift in Sources */,
 			);
@@ -365,6 +374,7 @@
 			files = (
 				41ECF1E223099DD900588953 /* PKCS7.swift in Sources */,
 				78312B2524C8C8DB008EB688 /* PKCS7_Signature.swift in Sources */,
+				41D14F7F2538639000B92428 /* X509ExtensionAltName.swift in Sources */,
 				41ECF1E023099DD900588953 /* ASN1Object.swift in Sources */,
 				41A2003623661A31005EC955 /* X509Extension.swift in Sources */,
 				41ECF1E323099DD900588953 /* PKCS7_AppleReceipt.swift in Sources */,

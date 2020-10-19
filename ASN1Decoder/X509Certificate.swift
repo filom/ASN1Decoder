@@ -232,12 +232,12 @@ public class X509Certificate: CustomStringConvertible {
 
     /// Gets a collection of subject alternative names from the SubjectAltName extension, (OID = 2.5.29.17).
     public var subjectAlternativeNames: [String] {
-        return extensionObject(oid: OID.subjectAltName)?.valueAsStrings ?? []
+        return extensionObject(oid: OID.subjectAltName)?.alternativeNameAsStrings ?? []
     }
 
     /// Gets a collection of issuer alternative names from the IssuerAltName extension, (OID = 2.5.29.18).
     public var issuerAlternativeNames: [String] {
-        return extensionObject(oid: OID.issuerAltName)?.valueAsStrings ?? []
+        return extensionObject(oid: OID.issuerAltName)?.alternativeNameAsStrings ?? []
     }
 
     /// Gets the informations of the public key from this certificate.

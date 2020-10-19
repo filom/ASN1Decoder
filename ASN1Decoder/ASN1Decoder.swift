@@ -200,7 +200,7 @@ public class ASN1DERDecoder {
     }
 
     // Decode DER OID bytes to String with dot notation
-    private static func decodeOid(contentData: inout Data) -> String {
+    static func decodeOid(contentData: inout Data) -> String {
         if contentData.isEmpty {
             return ""
         }
