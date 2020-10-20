@@ -72,11 +72,7 @@ extension PKCS7 {
     }
     
     func parseDate(_ dateString: String) -> Date? {
-        let rfc3339DateFormatter = DateFormatter()
-        rfc3339DateFormatter.locale = Locale(identifier: "en_US_POSIX")
-        rfc3339DateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZZZZZ"
-        rfc3339DateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
-        return rfc3339DateFormatter.date(from: dateString)
+        return ReceiptDateFormatter.date(from: dateString)        
     }
 
     public func receipt() -> ReceiptInfo? {
@@ -169,4 +165,40 @@ extension PKCS7 {
         return inAppPurchaseInfo
     }
 
+}
+
+// MARK: ReceiptDateFormatter
+
+/// Static formatting methods to use for string encoded date values in receipts
+private enum ReceiptDateFormatter {
+
+    /// Uses receipt-conform representation of dates like "2017-01-01T12:00:00Z",
+    /// as a fallback, dates like "2017-01-01T12:00:00.123Z" are also parsed.
+    static func date(from string: String) -> Date? {
+        return self.defaultDateFormatter.date(from: string) // expected
+            ?? self.fallbackDateFormatterWithMS.date(from: string) // try again with milliseconds
+    }
+
+    /// Uses receipt-conform representation of dates like "2017-01-01T12:00:00Z" (rfc3339 without millis)
+    private static let defaultDateFormatter: DateFormatter = {
+        let dateDateFormatter = DateFormatter()
+        dateDateFormatter.locale = Locale(identifier: "en_US_POSIX")
+        dateDateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZZZZZ"
+        dateDateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
+        return dateDateFormatter
+    }()
+
+    /// Uses representation of dates like "2017-01-01T12:00:00.123Z"
+    ///
+    /// This is not the officially intended format, but added after hearing reports about new format adding ms https://twitter.com/depth42/status/1314179654811607041
+    ///
+    /// The formatting String was taken from https://github.com/IdeasOnCanvas/AppReceiptValidator/pull/73
+    /// where tests were performed to check if it works
+    private static let fallbackDateFormatterWithMS: DateFormatter = {
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+        dateFormatter.dateFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'SSS'Z'"
+        dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
+        return dateFormatter
+    }()
 }
