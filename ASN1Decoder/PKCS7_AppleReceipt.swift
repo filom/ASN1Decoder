@@ -80,17 +80,13 @@ extension PKCS7 {
         guard var receiptBlock = block.parent?.sub?.last?.sub(0)?.sub(0) else { return nil }
         var receiptInfo = ReceiptInfo()
 
-        if let first = receiptBlock.sub(0), let flag = first.sub(0)?.sub(2)?.sub(0)?.value as? String, flag == "Xcode" {
-            receiptBlock = first
+        if receiptBlock.asString == "Xcode" {
+            receiptBlock = receiptBlock.sub(0)!
         }
         
         for item in receiptBlock.sub ?? [] {
-            var fieldType = (item.sub(0)?.value as? Data)?.toIntValue() ?? 0
-//            if let flag = item.sub(0)!.sub(2)?.sub(0)?.value as? String, flag == "Xcode" {
-//                fieldType = 2
-//            }
-            
-            let fieldValueString = item.sub(2)?.asString()
+            let fieldType = (item.sub(0)?.value as? Data)?.toIntValue() ?? 0
+            let fieldValueString = item.sub(2)?.asString
             switch fieldType {
             case 2:
                 receiptInfo.bundleIdentifier = fieldValueString

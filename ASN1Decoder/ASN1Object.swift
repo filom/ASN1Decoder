@@ -71,13 +71,13 @@ public class ASN1Object: CustomStringConvertible {
         return printAsn1()
     }
 
-    public func asString() -> String? {
+    public var asString: String? {
         if let string = value as? String {
             return string
         }
         
         for item in sub ?? [] {
-            if let string = item.asString() {
+            if let string = item.asString {
                 return string
             }
         }
