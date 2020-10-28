@@ -43,11 +43,15 @@ public class X509PublicKey {
         return pkBlock.sub(0)?.sub(1)?.value as? String
     }
 
+    public var rawKey: Data? {
+        return pkBlock.sub(1)?.value as? Data
+    }
+
     public var key: Data? {
         guard
             let algOid = algOid,
             let oid = OID(rawValue: algOid),
-            let keyData = pkBlock.sub(1)?.value as? Data else {
+            let keyData = rawKey else {
                 return nil
         }
 
