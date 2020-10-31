@@ -71,6 +71,20 @@ public class ASN1Object: CustomStringConvertible {
         return printAsn1()
     }
 
+    public var asString: String? {
+        if let string = value as? String {
+            return string
+        }
+        
+        for item in sub ?? [] {
+            if let string = item.asString {
+                return string
+            }
+        }
+        
+        return nil
+    }
+    
     fileprivate func printAsn1(insets: String = "") -> String {
         var output = insets
         output.append(identifier?.description.uppercased() ?? "")

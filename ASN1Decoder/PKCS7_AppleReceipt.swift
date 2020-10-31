@@ -77,12 +77,16 @@ extension PKCS7 {
 
     public func receipt() -> ReceiptInfo? {
         guard let block = mainBlock.findOid(.pkcs7data) else { return nil }
-        guard let receiptBlock = block.parent?.sub?.last?.sub(0)?.sub(0) else { return nil }
+        guard var receiptBlock = block.parent?.sub?.last?.sub(0)?.sub(0) else { return nil }
         var receiptInfo = ReceiptInfo()
 
+        if receiptBlock.asString == "Xcode" {
+            receiptBlock = receiptBlock.sub(0)!
+        }
+        
         for item in receiptBlock.sub ?? [] {
             let fieldType = (item.sub(0)?.value as? Data)?.toIntValue() ?? 0
-            let fieldValueString = item.sub(2)?.sub?.first?.value as? String
+            let fieldValueString = item.sub(2)?.asString
             switch fieldType {
             case 2:
                 receiptInfo.bundleIdentifier = fieldValueString
