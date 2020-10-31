@@ -16,6 +16,8 @@
 		412A9E571F55C6830099110C /* ASN1Identifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 412A9E531F55C6830099110C /* ASN1Identifier.swift */; };
 		412A9E581F55C6830099110C /* ASN1Object.swift in Sources */ = {isa = PBXBuildFile; fileRef = 412A9E541F55C6830099110C /* ASN1Object.swift */; };
 		412A9E591F55C6830099110C /* X509Certificate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 412A9E551F55C6830099110C /* X509Certificate.swift */; };
+		413610EB254B261700452768 /* ASN1Encoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 413610EA254B261700452768 /* ASN1Encoder.swift */; };
+		413610EF254B2A7800452768 /* ASN1Encoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 413610EA254B261700452768 /* ASN1Encoder.swift */; };
 		41A2003323661989005EC955 /* X509PublicKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41A2003223661989005EC955 /* X509PublicKey.swift */; };
 		41A2003523661A0D005EC955 /* X509Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41A2003423661A0D005EC955 /* X509Extension.swift */; };
 		41A2003623661A31005EC955 /* X509Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41A2003423661A0D005EC955 /* X509Extension.swift */; };
@@ -62,6 +64,7 @@
 		412A9E531F55C6830099110C /* ASN1Identifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ASN1Identifier.swift; sourceTree = "<group>"; };
 		412A9E541F55C6830099110C /* ASN1Object.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ASN1Object.swift; sourceTree = "<group>"; };
 		412A9E551F55C6830099110C /* X509Certificate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = X509Certificate.swift; sourceTree = "<group>"; };
+		413610EA254B261700452768 /* ASN1Encoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASN1Encoder.swift; sourceTree = "<group>"; };
 		414F5E2C1F55EFB700449E72 /* ASN1Decoder.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = ASN1Decoder.podspec; sourceTree = "<group>"; };
 		41A2003223661989005EC955 /* X509PublicKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = X509PublicKey.swift; sourceTree = "<group>"; };
 		41A2003423661A0D005EC955 /* X509Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = X509Extension.swift; sourceTree = "<group>"; };
@@ -130,6 +133,7 @@
 			children = (
 				412A9E3B1F55C6500099110C /* ASN1Decoder.h */,
 				412A9E521F55C6830099110C /* ASN1Decoder.swift */,
+				413610EA254B261700452768 /* ASN1Encoder.swift */,
 				412A9E531F55C6830099110C /* ASN1Identifier.swift */,
 				412A9E541F55C6830099110C /* ASN1Object.swift */,
 				41A2003823661DA8005EC955 /* ASN1DistinguishedNames.swift */,
@@ -348,6 +352,7 @@
 				41A2003523661A0D005EC955 /* X509Extension.swift in Sources */,
 				412A9E581F55C6830099110C /* ASN1Object.swift in Sources */,
 				41B11CD1202E16060009670B /* PKCS7_AppleReceipt.swift in Sources */,
+				413610EB254B261700452768 /* ASN1Encoder.swift in Sources */,
 				411C71E32393E64600857C13 /* OID.swift in Sources */,
 				41A2003323661989005EC955 /* X509PublicKey.swift in Sources */,
 				412A9E591F55C6830099110C /* X509Certificate.swift in Sources */,
@@ -378,6 +383,7 @@
 				41ECF1E023099DD900588953 /* ASN1Object.swift in Sources */,
 				41A2003623661A31005EC955 /* X509Extension.swift in Sources */,
 				41ECF1E323099DD900588953 /* PKCS7_AppleReceipt.swift in Sources */,
+				413610EF254B2A7800452768 /* ASN1Encoder.swift in Sources */,
 				411C71E42393E64F00857C13 /* OID.swift in Sources */,
 				41A2003723661A34005EC955 /* X509PublicKey.swift in Sources */,
 				41ECF1E123099DD900588953 /* X509Certificate.swift in Sources */,

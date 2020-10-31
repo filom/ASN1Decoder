@@ -63,6 +63,8 @@ public class ASN1Identifier: CustomStringConvertible {
         case characterString = 0x1D
         case bmpString = 0x1E
     }
+    
+    public static let constructedTag: UInt8 = 0x20
 
     var rawValue: UInt8
 
@@ -78,10 +80,10 @@ public class ASN1Identifier: CustomStringConvertible {
     }
 
     public func isPrimitive() -> Bool {
-        return (rawValue & 0x20) == 0
+        return (rawValue & ASN1Identifier.constructedTag) == 0
     }
     public func isConstructed() -> Bool {
-        return (rawValue & 0x20) != 0
+        return (rawValue & ASN1Identifier.constructedTag) != 0
     }
 
     public func tagNumber() -> TagNumber {

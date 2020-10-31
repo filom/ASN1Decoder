@@ -25,7 +25,7 @@ import Foundation
 
 public class X509PublicKey {
 
-    var pkBlock: ASN1Object!
+    let pkBlock: ASN1Object
 
     init(pkBlock: ASN1Object) {
         self.pkBlock = pkBlock
@@ -41,6 +41,10 @@ public class X509PublicKey {
 
     public var algParams: String? {
         return pkBlock.sub(0)?.sub(1)?.value as? String
+    }
+    
+    public var derEncodedKey: Data? {
+        return pkBlock.rawValue?.derEncodedSequence
     }
 
     public var key: Data? {
