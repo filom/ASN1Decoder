@@ -61,7 +61,7 @@ public class SignatureInfo {
     public let signature: ASN1Object?
     
     public var signatureData: Data? {
-        return signature?.value as? Data
+        return signature?.rawValue
     }
     
     public var disgestAlgorithmName: String? {
