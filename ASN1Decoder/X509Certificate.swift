@@ -102,7 +102,7 @@ public class X509Certificate: CustomStringConvertible {
     /// Returns the issuer (issuer distinguished name) value from the certificate as a String.
     public var issuerDistinguishedName: String? {
         if let issuerBlock = block1[X509BlockPosition.issuer] {
-            return blockDistinguishedName(block: issuerBlock)
+            return ASN1DistinguishedNames.string(from: issuerBlock)
         }
         return nil
     }
@@ -135,7 +135,7 @@ public class X509Certificate: CustomStringConvertible {
     /// Returns the subject (subject distinguished name) value from the certificate as a String.
     public var subjectDistinguishedName: String? {
         if let subjectBlock = block1[X509BlockPosition.subject] {
-            return blockDistinguishedName(block: subjectBlock)
+            return ASN1DistinguishedNames.string(from: subjectBlock)
         }
         return nil
     }
@@ -277,45 +277,19 @@ public class X509Certificate: CustomStringConvertible {
         return block1[X509BlockPosition.extensions]?
             .findOid(oid)?
             .parent
-            .map(X509Extension.init)
+            .map { oidExtensionMap[oid]?.init(block: $0) ?? X509Extension(block: $0) }
     }
 
-    // Format subject/issuer information in RFC1779
-    private func blockDistinguishedName(block: ASN1Object) -> String {
-        var result = ""
-        let oidNames: [ASN1DistinguishedNames] = [
-            .commonName,
-            .dnQualifier,
-            .serialNumber,
-            .givenName,
-            .surname,
-            .organizationalUnitName,
-            .organizationName,
-            .streetAddress,
-            .localityName,
-            .stateOrProvinceName,
-            .countryName,
-            .email
-        ]
-        for oidName in oidNames {
-            if let oidBlock = block.findOid(oidName.oid) {
-                if !result.isEmpty {
-                    result.append(", ")
-                }
-                result.append(oidName.representation)
-                result.append("=")
-                if let value = oidBlock.parent?.sub?.last?.value as? String {
-                    let specialChar = ",+=\n<>#;\\"
-                    let quote = value.contains(where: { specialChar.contains($0) }) ? "\"" : ""
-                    result.append(quote)
-                    result.append(value)
-                    result.append(quote)
-                }
-            }
-        }
-        return result
-    }
-
+    // Association of Class decoding helper and OID
+    private let oidExtensionMap: [String: X509Extension.Type] = [
+        OID.basicConstraints.rawValue: BasicConstraintExtension.self,
+        OID.subjectKeyIdentifier.rawValue: SubjectKeyIdentifierExtension.self,
+        OID.authorityInfoAccess.rawValue: AuthorityInfoAccessExtension.self,
+        OID.authorityKeyIdentifier.rawValue: AuthorityKeyIdentifierExtension.self,
+        OID.certificatePolicies.rawValue: CertificatePoliciesExtension.self,
+        OID.cRLDistributionPoints.rawValue: CRLDistributionPointsExtension.self
+    ]
+    
     // read possibile PEM encoding
     private static func decodeToDER(pem pemData: Data) -> Data? {
         if

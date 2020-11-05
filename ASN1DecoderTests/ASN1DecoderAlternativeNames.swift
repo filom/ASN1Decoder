@@ -43,6 +43,7 @@ class ASN1DecoderAlternativeNames: XCTestCase {
         XCTAssertTrue(subjectAlternativeNames.contains("1.2.3.4.5"))
         XCTAssertTrue(subjectAlternativeNames.contains("rfc.822.name"))
         XCTAssertTrue(subjectAlternativeNames.contains("uri.name"))
+        XCTAssertTrue(subjectAlternativeNames.contains("CN=common_name, OU=dev_world"))
     }
     
     let samplePEMcertificate =

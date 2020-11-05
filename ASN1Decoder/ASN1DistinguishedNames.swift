@@ -46,4 +46,46 @@ public class ASN1DistinguishedNames {
     public static let countryName            = ASN1DistinguishedNames(oid: "2.5.4.6", representation: "C")
     public static let email                  = ASN1DistinguishedNames(oid: "1.2.840.113549.1.9.1", representation: "E")
     
+    // Format subject/issuer information in RFC1779
+    class func string(from block: ASN1Object) -> String {
+        var result = ""
+        let oidNames: [ASN1DistinguishedNames] = [
+            .commonName,
+            .dnQualifier,
+            .serialNumber,
+            .givenName,
+            .surname,
+            .organizationalUnitName,
+            .organizationName,
+            .streetAddress,
+            .localityName,
+            .stateOrProvinceName,
+            .countryName,
+            .email
+        ]
+        for oidName in oidNames {
+            guard let oidBlock = block.findOid(oidName.oid) else {
+                continue
+            }
+            if !result.isEmpty {
+                // RFC allow "," or ";" and an optional additional space before and after
+                result.append(", ")
+            }
+            result.append(oidName.representation)
+            result.append("=")
+            if let value = oidBlock.parent?.sub?.last?.value as? String {
+                result.append(quote(string: value))
+            }
+        }
+        return result
+    }
+    
+    class func quote(string: String) -> String {
+        let specialChar = ",+=\n<>#;\\"
+        if string.contains(where: { specialChar.contains($0) }) {
+            return "\"" + string + "\""
+        } else {
+            return string
+        }
+    }
 }

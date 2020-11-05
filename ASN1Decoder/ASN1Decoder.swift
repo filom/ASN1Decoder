@@ -142,6 +142,7 @@ public class ASN1DERDecoder {
                     // custom/private tag
 
                     let contentData = try loadSubContent(iterator: &iterator)
+                    asn1obj.rawValue = Data(contentData)
 
                     if let str = String(data: contentData, encoding: .utf8) {
                         asn1obj.value = str
@@ -155,54 +156,10 @@ public class ASN1DERDecoder {
         return result
     }
 
-    // Decode the number of bytes of the content
-    private static func getContentLength(iterator: inout Data.Iterator) -> UInt64 {
-        let first = iterator.next()
-
-        guard first != nil else {
-            return 0
-        }
-
-        if (first! & 0x80) != 0 { // long
-            let octetsToRead = first! - 0x80
-            var data = Data()
-            for _ in 0..<octetsToRead {
-                if let n = iterator.next() {
-                    data.append(n)
-                }
-            }
-
-            return data.toIntValue() ?? 0
-
-        } else { // short
-            return UInt64(first!)
-        }
-    }
-
-    private static func loadSubContent(iterator: inout Data.Iterator) throws -> Data {
-
-        let len = getContentLength(iterator: &iterator)
-
-        guard len < Int.max else {
-            return Data()
-        }
-
-        var byteArray: [UInt8] = []
-
-        for _ in 0..<Int(len) {
-            if let n = iterator.next() {
-                byteArray.append(n)
-            } else {
-                throw ASN1Error.outOfBuffer
-            }
-        }
-        return Data(byteArray)
-    }
-
     // Decode DER OID bytes to String with dot notation
-    static func decodeOid(contentData: inout Data) -> String {
+    static func decodeOid(contentData: inout Data) -> String? {
         if contentData.isEmpty {
-            return ""
+            return nil
         }
 
         var oid: String = ""
@@ -253,4 +210,60 @@ extension Data {
         }
         return value
     }
+}
+
+extension Data {
+    public var sequenceContent: Data {
+        var iterator = self.makeIterator()
+        _ = iterator.next()
+        do {
+            return try loadSubContent(iterator: &iterator)
+        } catch {
+            return self
+        }
+    }
+}
+
+// Decode the number of bytes of the content
+private func getContentLength(iterator: inout Data.Iterator) -> UInt64 {
+    let first = iterator.next()
+
+    guard first != nil else {
+        return 0
+    }
+
+    if (first! & 0x80) != 0 { // long
+        let octetsToRead = first! - 0x80
+        var data = Data()
+        for _ in 0..<octetsToRead {
+            if let n = iterator.next() {
+                data.append(n)
+            }
+        }
+
+        return data.toIntValue() ?? 0
+
+    } else { // short
+        return UInt64(first!)
+    }
+}
+
+private func loadSubContent(iterator: inout Data.Iterator) throws -> Data {
+
+    let len = getContentLength(iterator: &iterator)
+
+    guard len < Int.max else {
+        return Data()
+    }
+
+    var byteArray: [UInt8] = []
+
+    for _ in 0..<Int(len) {
+        if let n = iterator.next() {
+            byteArray.append(n)
+        } else {
+            throw ASN1Error.outOfBuffer
+        }
+    }
+    return Data(byteArray)
 }

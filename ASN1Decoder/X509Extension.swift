@@ -27,7 +27,7 @@ public class X509Extension {
 
     let block: ASN1Object
 
-    init(block: ASN1Object) {
+    required init(block: ASN1Object) {
         self.block = block
     }
 
