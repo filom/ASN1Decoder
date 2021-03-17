@@ -24,13 +24,10 @@
 import Foundation
 
 public class PKCS7 {
-    let derData: Data
-    let asn1: [ASN1Object]
-    let mainBlock: ASN1Object
+    public let mainBlock: ASN1Object
 
     public init(data: Data) throws {
-        derData = data
-        asn1 = try ASN1DERDecoder.decode(data: derData)
+        let asn1 = try ASN1DERDecoder.decode(data: data)
 
         guard let firstBlock = asn1.first,
             let mainBlock = firstBlock.sub(1)?.sub(0) else {
