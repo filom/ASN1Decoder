@@ -200,7 +200,7 @@ enum ASN1Error: Error {
 
 extension Data {
     public func toIntValue() -> UInt64? {
-        if self.count > 8 { // check if suitable for UInt64
+        if self.count > 8 || self.isEmpty { // check if suitable for UInt64
             return nil
         }
 
