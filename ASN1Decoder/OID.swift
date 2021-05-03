@@ -22,7 +22,7 @@ public enum OID: String {
     case md5WithRSAEncryption = "1.2.840.113549.1.1.4"
     case sha1WithRSAEncryption = "1.2.840.113549.1.1.5"
     
-    //Digest algorithms
+    // Digest algorithms
     case sha1 = "1.3.14.3.2.26"
     case pkcsSha256 = "1.3.6.1.4.1.22554.1.2.1"
     case sha2Family = "1.3.6.1.4.1.22554.1.2"
