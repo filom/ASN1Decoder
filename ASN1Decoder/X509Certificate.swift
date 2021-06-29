@@ -88,10 +88,10 @@ public class X509Certificate: CustomStringConvertible {
 
     /// Gets the version (version number) value from the certificate.
     public var version: Int? {
-        if let v = firstLeafValue(block: block1) as? Data, let index = v.uint64Value {
-            return Int(index) + 1
+        if let data = firstLeafValue(block: block1) as? Data, let value = data.uint64Value, value < Int.max {
+            return Int(value) + 1
         }
-        return nil
+        return 1
     }
 
     /// Gets the serialNumber value from the certificate.
@@ -347,8 +347,13 @@ func firstLeafValue(block: ASN1Object) -> Any? {
 
 extension ASN1Object {
     subscript(index: X509Certificate.X509BlockPosition) -> ASN1Object? {
-        guard let sub = sub,
-            sub.indices.contains(index.rawValue) else { return nil }
-        return sub[index.rawValue]
+        guard let sub = sub else { return nil }
+        if sub.count <= 6 {
+            guard sub.indices.contains(index.rawValue-1) else { return nil }
+            return sub[index.rawValue-1]
+        } else {
+            guard sub.indices.contains(index.rawValue) else { return nil }
+            return sub[index.rawValue]
+        }
     }
 }
