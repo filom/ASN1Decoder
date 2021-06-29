@@ -88,7 +88,7 @@ public class X509Certificate: CustomStringConvertible {
 
     /// Gets the version (version number) value from the certificate.
     public var version: Int? {
-        if let v = firstLeafValue(block: block1) as? Data, let index = v.toIntValue() {
+        if let v = firstLeafValue(block: block1) as? Data, let index = v.uint64Value {
             return Int(index) + 1
         }
         return nil
