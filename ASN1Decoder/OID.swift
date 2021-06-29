@@ -22,7 +22,7 @@ public enum OID: String {
     case md5WithRSAEncryption = "1.2.840.113549.1.1.4"
     case sha1WithRSAEncryption = "1.2.840.113549.1.1.5"
     
-    //Digest algorithms
+    // Digest algorithms
     case sha1 = "1.3.14.3.2.26"
     case pkcsSha256 = "1.3.6.1.4.1.22554.1.2.1"
     case sha2Family = "1.3.6.1.4.1.22554.1.2"
@@ -40,8 +40,9 @@ public enum OID: String {
     case messageDigest = "1.2.840.113549.1.9.4"
     case signingTime = "1.2.840.113549.1.9.5"
     case certificateExtension = "1.3.6.1.4.1.11129.2.4.2"
-    case jurisdictionOfIncorporationSP = "1.3.6.1.4.1.311.60.2.1.2"
-    case jurisdictionOfIncorporationC = "1.3.6.1.4.1.311.60.2.1.3"
+    case jurisdictionLocalityName = "1.3.6.1.4.1.311.60.2.1.1"
+    case jurisdictionStateOrProvinceName = "1.3.6.1.4.1.311.60.2.1.2"
+    case jurisdictionCountryName = "1.3.6.1.4.1.311.60.2.1.3"
     case authorityInfoAccess = "1.3.6.1.5.5.7.1.1"
     case qcStatements = "1.3.6.1.5.5.7.1.3"
     case cps = "1.3.6.1.5.5.7.2.1"
@@ -65,19 +66,25 @@ public enum OID: String {
     case authorityKeyIdentifier = "2.5.29.35"
     case extKeyUsage = "2.5.29.37"
     case subjectDirectoryAttributes = "2.5.29.9"
-    case organizationName = "2.5.4.10"
-    case organizationalUnitName = "2.5.4.11"
-    case businessCategory = "2.5.4.15"
-    case postalCode = "2.5.4.17"
+    
+    // X.500 attributes
     case commonName = "2.5.4.3"
     case surname = "2.5.4.4"
-    case givenName = "2.5.4.42"
-    case dnQualifier = "2.5.4.46"
     case serialNumber = "2.5.4.5"
     case countryName = "2.5.4.6"
     case localityName = "2.5.4.7"
     case stateOrProvinceName = "2.5.4.8"
     case streetAddress = "2.5.4.9"
+    case organizationName = "2.5.4.10"
+    case organizationalUnitName = "2.5.4.11"
+    case businessCategory = "2.5.4.15"
+    case postalCode = "2.5.4.17"
+    case givenName = "2.5.4.42"
+    case dnQualifier = "2.5.4.46"
+    
+    case domainComponent = "0.9.2342.19200300.100.1.25"
+
+    case userId = "0.9.2342.19200300.100.1.1"
     
     static func description(of value: String) -> String? {
         guard let oid = OID(rawValue: value) else {

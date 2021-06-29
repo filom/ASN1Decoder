@@ -23,16 +23,17 @@
 
 import Foundation
 
+@available(*, deprecated, message: "Use OID instead")
 public class ASN1DistinguishedNames {
-    
+
     public let oid: String
     public let representation: String
-    
+
     init(oid: String, representation: String) {
         self.oid = oid
         self.representation = representation
     }
-   
+
     public static let commonName             = ASN1DistinguishedNames(oid: "2.5.4.3", representation: "CN")
     public static let dnQualifier            = ASN1DistinguishedNames(oid: "2.5.4.46", representation: "DNQ")
     public static let serialNumber           = ASN1DistinguishedNames(oid: "2.5.4.5", representation: "SERIALNUMBER")
@@ -45,36 +46,34 @@ public class ASN1DistinguishedNames {
     public static let stateOrProvinceName    = ASN1DistinguishedNames(oid: "2.5.4.8", representation: "ST")
     public static let countryName            = ASN1DistinguishedNames(oid: "2.5.4.6", representation: "C")
     public static let email                  = ASN1DistinguishedNames(oid: "1.2.840.113549.1.9.1", representation: "E")
+}
+
+public class ASN1DistinguishedNameFormatter {
     
+    public static var separator = ", "
+
     // Format subject/issuer information in RFC1779
-    class func string(from block: ASN1Object) -> String {
-        var result = ""
-        let oidNames: [ASN1DistinguishedNames] = [
-            .commonName,
-            .dnQualifier,
-            .serialNumber,
-            .givenName,
-            .surname,
-            .organizationalUnitName,
-            .organizationName,
-            .streetAddress,
-            .localityName,
-            .stateOrProvinceName,
-            .countryName,
-            .email
-        ]
-        for oidName in oidNames {
-            guard let oidBlock = block.findOid(oidName.oid) else {
-                continue
-            }
-            if !result.isEmpty {
-                // RFC allow "," or ";" and an optional additional space before and after
-                result.append(", ")
-            }
-            result.append(oidName.representation)
-            result.append("=")
-            if let value = oidBlock.parent?.sub?.last?.value as? String {
-                result.append(quote(string: value))
+    class func string(from block: ASN1Object) -> String? {
+        var result: String?
+        for sub in block.sub ?? [] {
+            if let subOid = sub.sub(0)?.sub(0), subOid.identifier?.tagNumber() == .objectIdentifier,
+               let oidString = subOid.value as? String, let value = sub.sub(0)?.sub(1)?.value as? String {
+                if result == nil {
+                    result = ""
+                } else {
+                    result?.append(separator)
+                }
+                if let oid = OID(rawValue: oidString) {
+                    if let representation = shortRepresentation(oid: oid) {
+                        result?.append(representation)
+                    } else {
+                        result?.append("\(oid)")
+                    }
+                } else {
+                    result?.append(oidString)
+                }
+                result?.append("=")
+                result?.append(quote(string: value))
             }
         }
         return result
@@ -86,6 +85,28 @@ public class ASN1DistinguishedNames {
             return "\"" + string + "\""
         } else {
             return string
+        }
+    }
+    
+    class func shortRepresentation(oid: OID) -> String? {
+        switch oid {
+        case .commonName: return "CN"
+        case .dnQualifier: return "DNQ"
+        case .serialNumber: return "SERIALNUMBER"
+        case .givenName: return "GIVENNAME"
+        case .surname: return "SURNAME"
+        case .organizationalUnitName: return "OU"
+        case .organizationName: return "O"
+        case .streetAddress: return "STREET"
+        case .localityName: return "L"
+        case .stateOrProvinceName: return "ST"
+        case .countryName: return "C"
+        case .emailAddress: return "E"
+        case .domainComponent: return "DC"
+        case .jurisdictionLocalityName: return "jurisdictionL"
+        case .jurisdictionStateOrProvinceName: return "jurisdictionST"
+        case .jurisdictionCountryName: return "jurisdictionC"
+        default: return nil
         }
     }
 }

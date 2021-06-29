@@ -35,7 +35,7 @@ public class ASN1Object: CustomStringConvertible {
 
     var sub: [ASN1Object]?
 
-    weak var parent: ASN1Object?
+    public internal(set) weak var parent: ASN1Object?
 
     public func sub(_ index: Int) -> ASN1Object? {
         if let sub = self.sub, index >= 0, index < sub.count {

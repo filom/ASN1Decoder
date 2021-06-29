@@ -25,7 +25,7 @@ import Foundation
 
 extension PKCS7 {
     public var signatures: [SignatureInfo]? {
-        //Signer infos sequence. https://tools.ietf.org/html/rfc5652#section-5.3
+        // Signer infos sequence. https://tools.ietf.org/html/rfc5652#section-5.3
         
         guard let signerInfos = mainBlock.sub(4) else {return nil}
         
