@@ -199,8 +199,9 @@ enum ASN1Error: Error {
 }
 
 extension Data {
-    public func toIntValue() -> UInt64? {
-        if self.count > 8 { // check if suitable for UInt64
+
+    public var uint64Value: UInt64? {
+        guard count <= 8, !isEmpty else { // check if suitable for UInt64
             return nil
         }
 
@@ -241,7 +242,7 @@ private func getContentLength(iterator: inout Data.Iterator) -> UInt64 {
             }
         }
 
-        return data.toIntValue() ?? 0
+        return data.uint64Value ?? 0
 
     } else { // short
         return UInt64(first!)
