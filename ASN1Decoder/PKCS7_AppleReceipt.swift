@@ -85,7 +85,7 @@ extension PKCS7 {
         }
         
         for item in receiptBlock.sub ?? [] {
-            let fieldType = (item.sub(0)?.value as? Data)?.toIntValue() ?? 0
+            let fieldType = (item.sub(0)?.value as? Data)?.uint64Value ?? 0
             let fieldValueString = item.sub(2)?.asString
             switch fieldType {
             case 2:
@@ -131,11 +131,11 @@ extension PKCS7 {
     private func inAppPurchase(_ subItems: [ASN1Object]) -> InAppPurchaseInfo {
         var inAppPurchaseInfo = InAppPurchaseInfo()
         subItems.forEach { subItem in
-            let fieldType = (subItem.sub(0)?.value as? Data)?.toIntValue() ?? 0
+            let fieldType = (subItem.sub(0)?.value as? Data)?.uint64Value ?? 0
             let fieldValue = subItem.sub(2)?.sub?.first?.value
             switch fieldType {
             case 1701:
-                inAppPurchaseInfo.quantity = (fieldValue as? Data)?.toIntValue()
+                inAppPurchaseInfo.quantity = (fieldValue as? Data)?.uint64Value
             case 1702:
                 inAppPurchaseInfo.productId = fieldValue as? String
             case 1703:
@@ -155,13 +155,13 @@ extension PKCS7 {
                     inAppPurchaseInfo.expiresDate = parseDate(fieldValueString)
                 }
             case 1719:
-                inAppPurchaseInfo.isInIntroOfferPeriod = (fieldValue as? Data)?.toIntValue()
+                inAppPurchaseInfo.isInIntroOfferPeriod = (fieldValue as? Data)?.uint64Value
             case 1712:
                 if let fieldValueString = fieldValue as? String {
                     inAppPurchaseInfo.cancellationDate = parseDate(fieldValueString)
                 }
             case 1711:
-                inAppPurchaseInfo.webOrderLineItemId = (fieldValue as? Data)?.toIntValue()
+                inAppPurchaseInfo.webOrderLineItemId = (fieldValue as? Data)?.uint64Value
             default:
                 break
             }

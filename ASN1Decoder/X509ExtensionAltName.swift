@@ -64,7 +64,9 @@ extension X509Extension {
                 return name
             }
         case 4:
-            return ASN1DistinguishedNames.string(from: item)
+            if let sequence = item.sub(0) {
+                return ASN1DistinguishedNameFormatter.string(from: sequence)
+            }
         case 7:
             if let ip = item.value as? Data {
                 return ip.map({ "\($0)" }).joined(separator: ".")

@@ -29,10 +29,14 @@ class ASN1DecoderTests: XCTestCase {
 
     func testDecodingPEM() throws {
         let x509 = try X509Certificate(data: certPEMData)
-        XCTAssertEqual(x509.serialNumber?.hexEncodedString(),
+        XCTAssertEqual(x509.version, 3)
+                       XCTAssertEqual(x509.serialNumber?.hexEncodedString(),
                        "0836BAA2556864172078584638D85C34")
         XCTAssertEqual(x509.subjectDistinguishedName,
-                       "CN=www.digicert.com, SERIALNUMBER=5299537-0142, OU=SRE, O=\"DigiCert, Inc.\", L=Lehi, ST=Utah, C=US")
+                       "businessCategory=Private Organization, jurisdictionC=US, jurisdictionST=Utah, SERIALNUMBER=5299537-0142, C=US, ST=Utah, L=Lehi, O=\"DigiCert, Inc.\", OU=SRE, CN=www.digicert.com")
+        XCTAssertEqual(x509.subject(oid: .commonName)?.first, "www.digicert.com")
+        XCTAssertEqual(x509.subject(oid: .serialNumber), ["5299537-0142"])
+        XCTAssertEqual(x509.subject(oid: .organizationName), ["DigiCert, Inc."])
     }
 
     func testDecoding() {
@@ -54,7 +58,7 @@ class ASN1DecoderTests: XCTestCase {
         
         XCTAssertEqual(serialNumber, "59A2F004")
         
-        XCTAssertEqual(subject, "CN=John Smith, L=New York, C=US, E=john@mail.com")
+        XCTAssertEqual(subject, "C=US, L=New York, E=john@mail.com, CN=John Smith")
     }
     
     let cert =

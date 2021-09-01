@@ -36,7 +36,7 @@ extension X509Certificate {
             guard let data = valueAsBlock?.sub(0)?.sub(1)?.value as? Data else {
                 return nil
             }
-            return data.toIntValue()
+            return data.uint64Value
         }
     }
 
