@@ -194,8 +194,14 @@ public class X509Certificate: CustomStringConvertible {
         return block1[X509BlockPosition.dateValidity]?.sub(1)?.value as? Date
     }
 
+    /// Gets the signature field, which should contain the same OID as in sigAlgOID
+    /// - See: RFC 5280 4.1.2.3
+    public var signature: String? {
+        return block1[X509BlockPosition.signatureAlg]?.sub(0)?.value as? String
+    }
+    
     /// Gets the signature value (the raw signature bits) from the certificate.
-    public var signature: Data? {
+    public var signatureValue: Data? {
         return asn1[0].sub(2)?.value as? Data
     }
 
