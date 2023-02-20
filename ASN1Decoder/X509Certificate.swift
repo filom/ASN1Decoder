@@ -194,10 +194,22 @@ public class X509Certificate: CustomStringConvertible {
         return block1[X509BlockPosition.dateValidity]?.sub(1)?.value as? Date
     }
 
-    /// Gets the signature field, which should contain the same OID as in sigAlgOID
-    /// - See: RFC 5280 4.1.2.3
-    public var signature: String? {
-        return block1[X509BlockPosition.signatureAlg]?.sub(0)?.value as? String
+    /// Gets the signature algorithm OID, which should contain the same OID as in
+    /// - See: RFC 5280 4.1.1.2
+    public var signatureAlgorithmOID: String? {
+        return asn1[0].sub(1)?.sub(0)?.value as? String
+    }
+    
+    /// Gets the signature algorithm name, which should contain the same OID as in
+    /// - See: RFC 5280 4.1.1.2
+    public var signatureAlgorithmName: String? {
+        return OID.description(of: signatureAlgorithmOID ?? "")
+    }
+    
+    /// Gets the signature algorithm parameters
+    /// - See: RFC 5280 4.1.1.2
+    public var signatureAlgorithmParams: Data? {
+        return asn1[0].sub(1)?.sub(1)?.rawValue
     }
     
     /// Gets the signature value (the raw signature bits) from the certificate.
@@ -205,19 +217,20 @@ public class X509Certificate: CustomStringConvertible {
         return asn1[0].sub(2)?.value as? Data
     }
 
-    /// Gets the signature algorithm name for the certificate signature algorithm.
-    public var sigAlgName: String? {
+    /// Gets the signature algorithm OID string from the inner tbs Certificate.
+    /// - See: RFC 5280 4.1.2.3
+    public var innerSignatureAlgorithmOID: String? {
+        return block1[X509BlockPosition.signatureAlg]?.sub(0)?.value as? String
+    }
+    
+    /// Gets the signature algorithm name for the inner tbs certificate signature algorithm.
+    public var innerSignatureAlgorithmName: String? {
         return OID.description(of: sigAlgOID ?? "")
     }
 
-    /// Gets the signature algorithm OID string from the certificate.
-    public var sigAlgOID: String? {
-        return block1.sub(2)?.sub(0)?.value as? String
-    }
-
-    /// Gets the DER-encoded signature algorithm parameters from this certificate's signature algorithm.
-    public var sigAlgParams: Data? {
-        return nil
+    /// Gets the DER-encoded signature algorithm parameters from this inner tbs certificate's signature algorithm.
+    public var innerSignatureAlgorithmParameters: Data? {
+        return block1[X509BlockPosition.signatureAlg]?.sub(1)?.rawValue
     }
 
     /**
