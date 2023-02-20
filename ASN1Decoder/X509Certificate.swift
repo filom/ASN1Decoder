@@ -225,7 +225,7 @@ public class X509Certificate: CustomStringConvertible {
     
     /// Gets the signature algorithm name for the inner tbs certificate signature algorithm.
     public var innerSignatureAlgorithmName: String? {
-        return OID.description(of: sigAlgOID ?? "")
+        return OID.description(of: innerSignatureAlgorithmOID ?? "")
     }
 
     /// Gets the DER-encoded signature algorithm parameters from this inner tbs certificate's signature algorithm.
