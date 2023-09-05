@@ -9,7 +9,7 @@ Pod::Spec.new do |s|
   s.ios.deployment_target = "9.0"
   s.osx.deployment_target = "10.10"
   s.tvos.deployment_target = "12.0"
-  s.source        = { :git => "https://github.com/filom/ASN1Decoder.git", :tag => s.version }
+  s.source        = { :git => "https://github.com/douglowder/ASN1Decoder.git", :branch => 'tvos' }
   s.source_files  = "ASN1Decoder/*.swift"
   s.swift_version = '5.0'
   s.frameworks    = "Foundation"
