@@ -1,3 +1,4 @@
+// swiftlint:disable function_body_length
 //
 //  ASN1DERDecoder.swift
 //
@@ -267,3 +268,4 @@ private func loadSubContent(iterator: inout Data.Iterator) throws -> Data {
     }
     return Data(byteArray)
 }
+// swiftlint:enable function_body_length
