@@ -8,7 +8,7 @@ ASN1 DER Decoder for X.509 Certificate
 
 ## Integration
 
-#### CocoaPods (iOS 9+, OS X 10.10+)
+#### CocoaPods (iOS 9+, OS X 10.10+, tvOS 13+)
 
 You can use [CocoaPods](http://cocoapods.org/) to install `ASN1Decoder` by adding it to your `Podfile`:
 
