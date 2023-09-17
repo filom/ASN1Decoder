@@ -29,10 +29,8 @@ class ASN1DecoderAlternativeNames: XCTestCase {
 
     func testDecodingAlternativeNames() {
         var subjectAlternativeNames = [String]()
-        
-        let certificateData = samplePEMcertificate.data(using: .utf8)!
         do {
-            let x509 = try X509Certificate(data: certificateData)
+            let x509 = try X509Certificate(data: samplePEMcertificateData)
             subjectAlternativeNames = x509.subjectAlternativeNames
         } catch {
             print(error)
@@ -46,7 +44,7 @@ class ASN1DecoderAlternativeNames: XCTestCase {
         XCTAssertTrue(subjectAlternativeNames.contains("OU=dev_world, CN=common_name"))
     }
     
-    let samplePEMcertificate =
+    let samplePEMcertificateData =
         """
         -----BEGIN CERTIFICATE-----
         MIIDLzCCAhegAwIBAgIEX4galDANBgkqhkiG9w0BAQsFADAWMRQwEgYDVQQDDAtj
@@ -68,5 +66,32 @@ class ASN1DecoderAlternativeNames: XCTestCase {
         tIrtDCLmWxFejP0oAfdzgfineN4XQwJGBlR2/OMCkQJxynyq+TfgXhtVmvmzPnZx
         D4cy
         -----END CERTIFICATE-----
+        """.data(using: .utf8)!
+    
+    
+    // MARK: - Test Subject with multiple domain component
+    
+    func testDoubleDomain() {
+        do {
+            let x509 = try X509Certificate(data: samplePEMcertificateData2)
+            let dc = x509.subject(oid: .domainComponent)
+            XCTAssertEqual(dc, ["domain2", "domain1"])
+        } catch {
+            XCTFail(error.localizedDescription)
+        }
+    }
+    
+    let samplePEMcertificateData2 =
         """
+        -----BEGIN CERTIFICATE-----
+        MIIBcjCCARigAwIBAgIEX6WPwDAKBggqhkjOPQQDAjBBMRcwFQYKCZImiZPyLGQB
+        GRYHZG9tYWluMjEXMBUGCgmSJomT8ixkARkWB2RvbWFpbjExDTALBgNVBAMMBG5h
+        bWUwHhcNMjAxMTA2MTgwMjQwWhcNMjExMTA2MTgwMjQwWjBBMRcwFQYKCZImiZPy
+        LGQBGRYHZG9tYWluMjEXMBUGCgmSJomT8ixkARkWB2RvbWFpbjExDTALBgNVBAMM
+        BG5hbWUwWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAATCCOGTRqbJ3tQQxl2gVsY+
+        Pk4VvAkW+D6lDSpDLadEBOlRirr3WrTsKPVTtsKA5YIt1e/zBxl9g5OgTJq8ktjI
+        MAoGCCqGSM49BAMCA0gAMEUCIB5Br1e3dUwbTYubxHkDHDJqmG48sbdMZbuB19oD
+        wThoAiEA0eEpfby8LRQcFlybk0LKyRrl1m4DGyMfgN/5bJaN9zU=
+        -----END CERTIFICATE-----
+        """.data(using: .utf8)!
 }

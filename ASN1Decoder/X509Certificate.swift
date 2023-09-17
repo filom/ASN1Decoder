@@ -211,7 +211,12 @@ public class X509Certificate: CustomStringConvertible {
 
     /// Gets the DER-encoded signature algorithm parameters from this certificate's signature algorithm.
     public var sigAlgParams: Data? {
-        return nil
+        guard let obj = block1[X509BlockPosition.signatureAlg]?.sub(1) else { return nil }
+        if obj.identifier?.tagNumber() == .null {
+            return Data([0x05, 0x00])
+        } else {
+            return obj.rawValue?.derEncodedSequence
+        }
     }
 
     /**

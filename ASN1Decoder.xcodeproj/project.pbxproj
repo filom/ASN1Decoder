@@ -10,7 +10,7 @@
 		411C71E32393E64600857C13 /* OID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 411C71E22393E64600857C13 /* OID.swift */; };
 		411C71E42393E64F00857C13 /* OID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 411C71E22393E64600857C13 /* OID.swift */; };
 		412A9E421F55C6500099110C /* ASN1Decoder.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 412A9E381F55C6500099110C /* ASN1Decoder.framework */; };
-		412A9E471F55C6500099110C /* ASN1DecoderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 412A9E461F55C6500099110C /* ASN1DecoderTests.swift */; };
+		412A9E471F55C6500099110C /* ASN1DecoderX509DecoderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 412A9E461F55C6500099110C /* ASN1DecoderX509DecoderTests.swift */; };
 		412A9E491F55C6500099110C /* ASN1Decoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 412A9E3B1F55C6500099110C /* ASN1Decoder.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		412A9E561F55C6830099110C /* ASN1Decoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 412A9E521F55C6830099110C /* ASN1Decoder.swift */; };
 		412A9E571F55C6830099110C /* ASN1Identifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 412A9E531F55C6830099110C /* ASN1Identifier.swift */; };
@@ -18,6 +18,8 @@
 		412A9E591F55C6830099110C /* X509Certificate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 412A9E551F55C6830099110C /* X509Certificate.swift */; };
 		413610EB254B261700452768 /* ASN1Encoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 413610EA254B261700452768 /* ASN1Encoder.swift */; };
 		413610EF254B2A7800452768 /* ASN1Encoder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 413610EA254B261700452768 /* ASN1Encoder.swift */; };
+		413CB0292AB78CB200FD5FEA /* ASN1DecoderX509SignatureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 413CB0282AB78CB200FD5FEA /* ASN1DecoderX509SignatureTests.swift */; };
+		413CB02D2AB78F0600FD5FEA /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 413CB02C2AB78F0600FD5FEA /* Extensions.swift */; };
 		41409EEE25536A6C0048709B /* X509ExtensionClasses.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41409EED25536A6C0048709B /* X509ExtensionClasses.swift */; };
 		41409EEF25536A6C0048709B /* X509ExtensionClasses.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41409EED25536A6C0048709B /* X509ExtensionClasses.swift */; };
 		41409EF425536B300048709B /* ASN1DecoderExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41409EF325536B300048709B /* ASN1DecoderExtensions.swift */; };
@@ -43,7 +45,7 @@
 		41ECF1E323099DD900588953 /* PKCS7_AppleReceipt.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41B11CD0202E16060009670B /* PKCS7_AppleReceipt.swift */; };
 		78312B2424C8C8DB008EB688 /* PKCS7_Signature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78312B2324C8C8DB008EB688 /* PKCS7_Signature.swift */; };
 		78312B2524C8C8DB008EB688 /* PKCS7_Signature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78312B2324C8C8DB008EB688 /* PKCS7_Signature.swift */; };
-		78312B2724C8C8ED008EB688 /* ASN1DecoderSignatureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78312B2624C8C8ED008EB688 /* ASN1DecoderSignatureTests.swift */; };
+		78312B2724C8C8ED008EB688 /* ASN1DecoderPkcs7SignatureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78312B2624C8C8ED008EB688 /* ASN1DecoderPkcs7SignatureTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -62,13 +64,15 @@
 		412A9E3B1F55C6500099110C /* ASN1Decoder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ASN1Decoder.h; sourceTree = "<group>"; };
 		412A9E3C1F55C6500099110C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		412A9E411F55C6500099110C /* ASN1DecoderTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ASN1DecoderTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		412A9E461F55C6500099110C /* ASN1DecoderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASN1DecoderTests.swift; sourceTree = "<group>"; };
+		412A9E461F55C6500099110C /* ASN1DecoderX509DecoderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASN1DecoderX509DecoderTests.swift; sourceTree = "<group>"; };
 		412A9E481F55C6500099110C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		412A9E521F55C6830099110C /* ASN1Decoder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ASN1Decoder.swift; sourceTree = "<group>"; };
 		412A9E531F55C6830099110C /* ASN1Identifier.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ASN1Identifier.swift; sourceTree = "<group>"; };
 		412A9E541F55C6830099110C /* ASN1Object.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ASN1Object.swift; sourceTree = "<group>"; };
 		412A9E551F55C6830099110C /* X509Certificate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = X509Certificate.swift; sourceTree = "<group>"; };
 		413610EA254B261700452768 /* ASN1Encoder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASN1Encoder.swift; sourceTree = "<group>"; };
+		413CB0282AB78CB200FD5FEA /* ASN1DecoderX509SignatureTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASN1DecoderX509SignatureTests.swift; sourceTree = "<group>"; };
+		413CB02C2AB78F0600FD5FEA /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		41409EED25536A6C0048709B /* X509ExtensionClasses.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = X509ExtensionClasses.swift; sourceTree = "<group>"; };
 		41409EF325536B300048709B /* ASN1DecoderExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASN1DecoderExtensions.swift; sourceTree = "<group>"; };
 		414F5E2C1F55EFB700449E72 /* ASN1Decoder.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = ASN1Decoder.podspec; sourceTree = "<group>"; };
@@ -85,7 +89,7 @@
 		41ECF195230985DC00588953 /* ASN1Decoder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ASN1Decoder.h; sourceTree = "<group>"; };
 		41ECF196230985DC00588953 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		78312B2324C8C8DB008EB688 /* PKCS7_Signature.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PKCS7_Signature.swift; sourceTree = "<group>"; };
-		78312B2624C8C8ED008EB688 /* ASN1DecoderSignatureTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ASN1DecoderSignatureTests.swift; sourceTree = "<group>"; };
+		78312B2624C8C8ED008EB688 /* ASN1DecoderPkcs7SignatureTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ASN1DecoderPkcs7SignatureTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -161,12 +165,14 @@
 		412A9E451F55C6500099110C /* ASN1DecoderTests */ = {
 			isa = PBXGroup;
 			children = (
-				78312B2624C8C8ED008EB688 /* ASN1DecoderSignatureTests.swift */,
-				412A9E461F55C6500099110C /* ASN1DecoderTests.swift */,
+				412A9E461F55C6500099110C /* ASN1DecoderX509DecoderTests.swift */,
+				413CB0282AB78CB200FD5FEA /* ASN1DecoderX509SignatureTests.swift */,
 				41D14F722538608E00B92428 /* ASN1DecoderAlternativeNames.swift */,
 				41409EF325536B300048709B /* ASN1DecoderExtensions.swift */,
 				4168884B268B294300F40E7C /* ASN1DecoderCertificateV1.swift */,
+				78312B2624C8C8ED008EB688 /* ASN1DecoderPkcs7SignatureTests.swift */,
 				41B703C3239D2EC600904B6B /* ASN1AppleReceiptTest.swift */,
+				413CB02C2AB78F0600FD5FEA /* Extensions.swift */,
 				412A9E481F55C6500099110C /* Info.plist */,
 			);
 			path = ASN1DecoderTests;
@@ -378,11 +384,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				41B703C4239D2EC600904B6B /* ASN1AppleReceiptTest.swift in Sources */,
+				413CB0292AB78CB200FD5FEA /* ASN1DecoderX509SignatureTests.swift in Sources */,
 				41409EF425536B300048709B /* ASN1DecoderExtensions.swift in Sources */,
+				413CB02D2AB78F0600FD5FEA /* Extensions.swift in Sources */,
 				4168884C268B294300F40E7C /* ASN1DecoderCertificateV1.swift in Sources */,
 				41D14F732538608E00B92428 /* ASN1DecoderAlternativeNames.swift in Sources */,
-				78312B2724C8C8ED008EB688 /* ASN1DecoderSignatureTests.swift in Sources */,
-				412A9E471F55C6500099110C /* ASN1DecoderTests.swift in Sources */,
+				78312B2724C8C8ED008EB688 /* ASN1DecoderPkcs7SignatureTests.swift in Sources */,
+				412A9E471F55C6500099110C /* ASN1DecoderX509DecoderTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

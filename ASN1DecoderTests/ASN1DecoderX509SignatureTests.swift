@@ -1,0 +1,109 @@
+//
+//  ASN1DecoderX509SignatureTests.swift
+//  ASN1DecoderTests
+//
+//  Copyright © 2023 Filippo Maguolo.
+//
+//  Permission is hereby granted, free of charge, to any person obtaining a copy
+//  of this software and associated documentation files (the "Software"), to deal
+//  in the Software without restriction, including without limitation the rights
+//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//  copies of the Software, and to permit persons to whom the Software is
+//  furnished to do so, subject to the following conditions:
+//
+//  The above copyright notice and this permission notice shall be included in all
+//  copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+//  SOFTWARE.
+
+import XCTest
+@testable import ASN1Decoder
+
+class ASN1DecoderX509SignatureTests: XCTestCase {
+    
+    func testSignatureRsa() {
+        do {
+            let x509 = try X509Certificate(data: certRsa)
+            XCTAssertEqual(
+                x509.signature?.hexEncodedString(),
+                "86521A31A13D613254B920B2D0B01DFA71F3B937689200C25DD4FBE4AB6C88DB501D0203B4B85D246614CE5594C18F12416CADBC93912A2DEAAC0E39A0BC12263558E2166E35C69695E0EE9A71DCE2B6CAF68E86261124FD3E3D56B73DAB808D5F4FEC88F06C1F05DDAEAACB391D34C9FACC6023C0502AF23DB771FC83DBA3C67792F9501E7F1CA8E8E0A9DC2ECBB3D3308333EAC0AC05C57439E029F341834401E98C1DEA621CE179B89188CF816EABDAE9FE1BC4D983350B4BD23B746BC29EC90AC535D02182362400A4EE713842BB595A24A18A0012BDD1D3282ED6C91717D1863CE68D7F532466098029D13430E75E95543ACA6FD98787BC2F6039D46168"
+            )
+            XCTAssertEqual(x509.sigAlgName, "sha256WithRSAEncryption")
+            XCTAssertEqual(x509.sigAlgOID, "1.2.840.113549.1.1.11")
+            XCTAssertEqual(x509.sigAlgParams?.hexEncodedString(), "0500")
+        } catch {
+            XCTFail(error.localizedDescription)
+        }
+    }
+    
+    func testSignaturePssRsa() {
+        do {
+            let x509 = try X509Certificate(data: certPssRsa)
+            XCTAssertEqual(
+                x509.signature?.hexEncodedString(),
+                "5C61AA8EA4EBC052A5CC86CA663E16D3B2AE77BA9E2C596DF5369D7A8FDA2281016854E9DC25D9ADF1D30A3E5603CCE70C4A39F70E0EF7F26AC4C56E3A9B772EE3A5A665ACF6CBBFAE633D0972BF3EDC6D703B362A8E3227D66E1699EFA48F5BE85A7163918657FA7F061340C68146F2415FDAACA7687515BD4458923449E49D82A167B569D76249D3AD3CBEA7C1858DB8C6335703593006BE26C8153D859A2A6EE9D537E108046F44A648486DBCD721C9CAB8DFA1F3D2ADAF89B8C3D47B09624FE4A9E22DE012AD97EC79E467677B314A1FA31F2EC0618A392921C391F50B61A27051C3CAF3C8274078853C5178045F8A0CA7A1FB07B13CF107C5358062C92E"
+            )
+            
+            XCTAssertEqual(x509.sigAlgName, "rsaPSS")
+            XCTAssertEqual(x509.sigAlgOID, "1.2.840.113549.1.1.10")
+            XCTAssertEqual(
+                x509.sigAlgParams?.hexEncodedString(),
+                "3034A00F300D06096086480165030402020500A11C301A06092A864886F70D010108300D06096086480165030402020500A203020130"
+            )
+        } catch {
+            XCTFail(error.localizedDescription)
+        }
+    }
+        
+    let certRsa = """
+    -----BEGIN CERTIFICATE-----
+    MIIDMzCCAhugAwIBAgIEWaLwBDANBgkqhkiG9w0BAQsFADBTMQswCQYDVQQGEwJV
+    UzERMA8GA1UEBwwITmV3IFlvcmsxHDAaBgkqhkiG9w0BCQEWDWpvaG5AbWFpbC5j
+    b20xEzARBgNVBAMMCkpvaG4gU21pdGgwHhcNMTcwODI3MTYxNTAwWhcNMTgwODI3
+    MTYxNTAwWjBTMQswCQYDVQQGEwJVUzERMA8GA1UEBwwITmV3IFlvcmsxHDAaBgkq
+    hkiG9w0BCQEWDWpvaG5AbWFpbC5jb20xEzARBgNVBAMMCkpvaG4gU21pdGgwggEi
+    MA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDHc/RdKvcz+Sakwykuq/+mJZCQ
+    ELYYk3ceVrYOwefaFLent4JU+/ATm+CQFXqyiQM1BTtXUwA3gG0sCufMUG5wkHN0
+    86KwclYhzPRZNGtLW2QshvvaN2wE4HxbFJ/DUUHPGuIlzewfecg/ZG9CwGeb/HQ4
+    Qx+BI/U7JXykyNHFwMQrS5hGmvLH7MxSYiqt8X2VZ7vabxdqnvpufK34SyVQXkfR
+    twLNj7GO807HNQ5EGFw1hxJN3tBXG4z+1eq4rgy1RJY7c6ntkzOczrqw7Ut4OUmC
+    RjAEggqPrG6R94D2f8vgEXB42TPSEKWwHi6/RAEZ1WO5YsDmLHVNxp8FvThVAgMB
+    AAGjDzANMAsGA1UdDwQEAwIGQDANBgkqhkiG9w0BAQsFAAOCAQEAhlIaMaE9YTJU
+    uSCy0LAd+nHzuTdokgDCXdT75KtsiNtQHQIDtLhdJGYUzlWUwY8SQWytvJORKi3q
+    rA45oLwSJjVY4hZuNcaWleDumnHc4rbK9o6GJhEk/T49Vrc9q4CNX0/siPBsHwXd
+    rqrLOR00yfrMYCPAUCryPbdx/IPbo8Z3kvlQHn8cqOjgqdwuy7PTMIMz6sCsBcV0
+    OeAp80GDRAHpjB3qYhzhebiRiM+Bbqva6f4bxNmDNQtL0jt0a8KeyQrFNdAhgjYk
+    AKTucThCu1laJKGKABK90dMoLtbJFxfRhjzmjX9TJGYJgCnRNDDnXpVUOspv2YeH
+    vC9gOdRhaA==
+    -----END CERTIFICATE-----
+    """.data(using: .utf8)!
+
+    let certPssRsa =
+    """
+    -----BEGIN CERTIFICATE-----
+    MIIDBDCCAbigAwIBAgIEZCSoaTBBBgkqhkiG9w0BAQowNKAPMA0GCWCGSAFlAwQC
+    AgUAoRwwGgYJKoZIhvcNAQEIMA0GCWCGSAFlAwQCAgUAogMCATAwEDEOMAwGA1UE
+    AwwFcnJycnIwHhcNMjMwMzI5MjEwNjQ5WhcNMjQwMzI4MjEwNjQ5WjAQMQ4wDAYD
+    VQQDDAVycnJycjCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAOmPnB92
+    dlTeDKcLy+9cGJR1haGNy53MsrVFZhStt450qtd0GE2B5s4UQu55qYqJpmRBeotX
+    d7pAMSCiGe+G3zRbKCBguiVvQqdLrVpsyeVqzU1dZo7mj5l7o/1uQU/GaD5GISHm
+    2ilj4z2BIVAwzU/igBnaP5bkdG4ms35Hrjx9vZK5wKPbTicSBrNTmHALk6R22y3f
+    rFjHQZLPky9V65K10aDXQqtBmXhYLMFI1KVeS3SuhRnAwkdudSeOIFBmwscJHPd3
+    rCrWWjeoh+mV1j/pzSeLhkZpT3rm8FvXJCJoTjUo9P3VeqyyIF6yOhBpq9Qbo0zk
+    SnpSBPIrlJ+EMAkCAwEAATBBBgkqhkiG9w0BAQowNKAPMA0GCWCGSAFlAwQCAgUA
+    oRwwGgYJKoZIhvcNAQEIMA0GCWCGSAFlAwQCAgUAogMCATADggEBAFxhqo6k68BS
+    pcyGymY+FtOyrne6nixZbfU2nXqP2iKBAWhU6dwl2a3x0wo+VgPM5wxKOfcODvfy
+    asTFbjqbdy7jpaZlrPbLv65jPQlyvz7cbXA7NiqOMifWbhaZ76SPW+hacWORhlf6
+    fwYTQMaBRvJBX9qsp2h1Fb1EWJI0SeSdgqFntWnXYknTrTy+p8GFjbjGM1cDWTAG
+    vibIFT2Fmipu6dU34QgEb0SmSEhtvNchycq436Hz0q2vibjD1HsJYk/kqeIt4BKt
+    l+x55GdnezFKH6MfLsBhijkpIcOR9QthonBRw8rzyCdAeIU8UXgEX4oMp6H7B7E8
+    8QfFNYBiyS4=
+    -----END CERTIFICATE-----
+    """.data(using: .utf8)!
+}
