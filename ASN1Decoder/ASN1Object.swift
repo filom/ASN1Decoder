@@ -33,7 +33,7 @@ public class ASN1Object: CustomStringConvertible {
 
     public var identifier: ASN1Identifier?
 
-    var sub: [ASN1Object]?
+    public internal(set) var sub: [ASN1Object]?
 
     public internal(set) weak var parent: ASN1Object?
 
