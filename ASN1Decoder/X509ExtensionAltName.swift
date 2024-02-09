@@ -70,6 +70,9 @@ extension X509Extension {
         case 7:
             if let ip = item.value as? Data {
                 return ip.map({ "\($0)" }).joined(separator: ".")
+            } else if let ipString = item.value as? String {
+                let ipData = Data(ipString.utf8)
+                return ipData.map({ "\($0)" }).joined(separator: ".")
             }
         case 8:
             if let value = item.value as? String, var data = value.data(using: .utf8) {
