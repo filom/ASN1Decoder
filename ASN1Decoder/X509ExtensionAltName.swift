@@ -68,11 +68,23 @@ extension X509Extension {
                 return ASN1DistinguishedNameFormatter.string(from: sequence)
             }
         case 7:
-            if let ip = item.rawValue {
-                let separator = ip.count == 4 ? "." : ":"
-                return ip.map({ "\($0)" }).joined(separator: separator)
+            if let ipData = item.rawValue {
+                if ipData.count == 4 {
+                    return ipData.map({ "\($0)" }).joined(separator: ".")
+                } else if ipData.count == 16 {
+                    let ipBytes = [UInt8](ipData)
+                    return stride(from: 0, to: 16, by: 2)
+                        .map { offset in
+                            let uint16 = ipBytes.withUnsafeBytes {
+                                $0.load(fromByteOffset: offset, as: UInt16.self)
+                            }
+                            return String(format: "%x", uint16.byteSwapped)
+                        }
+                        .joined(separator: ":")
+                } else {
+                    return nil
+                }
             }
-
         case 8:
             if let value = item.value as? String, var data = value.data(using: .utf8) {
                 let oid = ASN1DERDecoder.decodeOid(contentData: &data)
