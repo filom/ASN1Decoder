@@ -68,9 +68,11 @@ extension X509Extension {
                 return ASN1DistinguishedNameFormatter.string(from: sequence)
             }
         case 7:
-            if let ip = item.value as? Data {
-                return ip.map({ "\($0)" }).joined(separator: ".")
+            if let ip = item.rawValue {
+                let separator = ip.count == 4 ? "." : ":"
+                return ip.map({ "\($0)" }).joined(separator: separator)
             }
+
         case 8:
             if let value = item.value as? String, var data = value.data(using: .utf8) {
                 let oid = ASN1DERDecoder.decodeOid(contentData: &data)
