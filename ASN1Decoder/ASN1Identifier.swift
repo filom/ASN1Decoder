@@ -73,10 +73,7 @@ public class ASN1Identifier: CustomStringConvertible {
     }
 
     public func typeClass() -> Class {
-        for tc in [Class.application, Class.contextSpecific, Class.private] where (rawValue & tc.rawValue) == tc.rawValue {
-            return tc
-        }
-        return .universal
+        return Class(rawValue: rawValue & 0xC0) ?? .universal
     }
 
     public func isPrimitive() -> Bool {
