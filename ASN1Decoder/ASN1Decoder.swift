@@ -200,6 +200,7 @@ enum ASN1Error: Error {
 }
 
 extension Data {
+
     public var uint64Value: UInt64? {
         guard count <= 8, !isEmpty else { // check if suitable for UInt64
             return nil
